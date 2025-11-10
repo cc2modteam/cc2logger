@@ -1,0 +1,145 @@
+{"timestamp": "2025-10-31T15:08:04Z", "type": "player_joined", "player_name": "Bredroll", "player_id": "76561198074375146", "team_id": "1"}
+{"timestamp": "2025-10-31T15:09:00Z", "type": "player_joined", "player_name": "deliachin", "player_id": "76561199010901666", "team_id": "1"}
+{"timestamp": "2025-10-31T15:09:36Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "hi"}
+{"timestamp": "2025-10-31T15:12:37Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "dont turn on wepions until we get there"}
+{"timestamp": "2025-10-31T15:13:25Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "you want to fly?"}
+{"timestamp": "2025-10-31T15:13:43Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "no last time i crashed"}
+{"timestamp": "2025-10-31T15:14:30Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "we are here"}
+{"timestamp": "2025-10-31T15:14:48Z", "type": "destroy_vehicle", "vehicle_id": "29", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:14:48Z", "type": "destroy_vehicle", "vehicle_id": "20", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:14:52Z", "type": "destroy_vehicle", "vehicle_id": "21", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:14:55Z", "type": "destroy_vehicle", "vehicle_id": "27", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:14:59Z", "type": "destroy_vehicle", "vehicle_id": "32", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:03Z", "type": "destroy_vehicle", "vehicle_id": "31", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:05Z", "type": "destroy_vehicle", "vehicle_id": "18", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:10Z", "type": "destroy_vehicle", "vehicle_id": "17", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:11Z", "type": "destroy_vehicle", "vehicle_id": "26", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:12Z", "type": "destroy_vehicle", "vehicle_id": "19", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:17Z", "type": "destroy_vehicle", "vehicle_id": "23", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:18Z", "type": "destroy_vehicle", "vehicle_id": "22", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:19Z", "type": "destroy_vehicle", "vehicle_id": "16", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:25Z", "type": "destroy_vehicle", "vehicle_id": "24", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:34Z", "type": "destroy_vehicle", "vehicle_id": "30", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:34Z", "type": "destroy_vehicle", "vehicle_id": "15", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:40Z", "type": "destroy_vehicle", "vehicle_id": "13", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:46Z", "type": "destroy_vehicle", "vehicle_id": "14", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:46Z", "type": "destroy_vehicle", "vehicle_id": "28", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:15:58Z", "type": "destroy_vehicle", "vehicle_id": "25", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:16:10Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "ok i think im done!"}
+{"timestamp": "2025-10-31T15:16:18Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "that was faster than normal :D"}
+{"timestamp": "2025-10-31T15:20:57Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "next time deploy it closer to the island"}
+{"timestamp": "2025-10-31T15:21:08Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "we dont need to wait for it"}
+{"timestamp": "2025-10-31T15:21:32Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "why?"}
+{"timestamp": "2025-10-31T15:21:33Z", "type": "destroy_vehicle", "vehicle_id": "77", "vehicle_type": "77", "team": "0"}
+{"timestamp": "2025-10-31T15:21:37Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "its on auto"}
+{"timestamp": "2025-10-31T15:21:40Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "we can get it later "}
+{"timestamp": "2025-10-31T15:21:51Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "ok"}
+{"timestamp": "2025-10-31T15:21:55Z", "type": "player_joined", "player_name": "Bob Shwong", "player_id": "76561198327981368", "team_id": "1"}
+{"timestamp": "2025-10-31T15:22:24Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "Helloooo"}
+{"timestamp": "2025-10-31T15:22:27Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "hi"}
+{"timestamp": "2025-10-31T15:22:46Z", "type": "destroy_vehicle", "vehicle_id": "58", "vehicle_type": "8", "team": "0"}
+{"timestamp": "2025-10-31T15:23:00Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "where to"}
+{"timestamp": "2025-10-31T15:23:07Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "elwood :)"}
+{"timestamp": "2025-10-31T15:23:21Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "ok"}
+{"timestamp": "2025-10-31T15:25:13Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "should the plane land"}
+{"timestamp": "2025-10-31T15:25:26Z", "type": "island_captured", "island_id": "10", "team_id": "1"}
+{"timestamp": "2025-10-31T15:27:13Z", "type": "destroy_vehicle", "vehicle_id": "57", "vehicle_type": "14", "team": "0"}
+{"timestamp": "2025-10-31T15:27:22Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "one was enough let's not spam them"}
+{"timestamp": "2025-10-31T15:27:32Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "sorry"}
+{"timestamp": "2025-10-31T15:28:47Z", "type": "destroy_vehicle", "vehicle_id": "159", "vehicle_type": "58", "team": "1"}
+{"timestamp": "2025-10-31T15:28:48Z", "type": "destroy_vehicle", "vehicle_id": "160", "vehicle_type": "58", "team": "1"}
+{"timestamp": "2025-10-31T15:28:49Z", "type": "destroy_vehicle", "vehicle_id": "59", "vehicle_type": "14", "team": "0"}
+{"timestamp": "2025-10-31T15:28:51Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "why 2?"}
+{"timestamp": "2025-10-31T15:29:08Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "i didn't see it"}
+{"timestamp": "2025-10-31T15:29:24Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "ok, time me :)"}
+{"timestamp": "2025-10-31T15:29:50Z", "type": "destroy_vehicle", "vehicle_id": "75", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-10-31T15:29:56Z", "type": "destroy_vehicle", "vehicle_id": "63", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:29:58Z", "type": "destroy_vehicle", "vehicle_id": "76", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-10-31T15:30:06Z", "type": "destroy_vehicle", "vehicle_id": "70", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:30:09Z", "type": "destroy_vehicle", "vehicle_id": "62", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-10-31T15:30:16Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "should we land the plane on low amo"}
+{"timestamp": "2025-10-31T15:30:18Z", "type": "destroy_vehicle", "vehicle_id": "67", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:30:25Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "ok"}
+{"timestamp": "2025-10-31T15:30:35Z", "type": "destroy_vehicle", "vehicle_id": "69", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-10-31T15:30:45Z", "type": "destroy_vehicle", "vehicle_id": "64", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:30:59Z", "type": "destroy_vehicle", "vehicle_id": "73", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-10-31T15:31:15Z", "type": "destroy_vehicle", "vehicle_id": "68", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:31:30Z", "type": "destroy_vehicle", "vehicle_id": "71", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:31:33Z", "type": "destroy_vehicle", "vehicle_id": "72", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:31:54Z", "type": "destroy_vehicle", "vehicle_id": "66", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-10-31T15:32:02Z", "type": "destroy_vehicle", "vehicle_id": "65", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-10-31T15:32:04Z", "type": "destroy_vehicle", "vehicle_id": "61", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:32:04Z", "type": "destroy_vehicle", "vehicle_id": "74", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-10-31T15:32:13Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "i think thats it"}
+{"timestamp": "2025-10-31T15:32:29Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "one more"}
+{"timestamp": "2025-10-31T15:36:04Z", "type": "destroy_vehicle", "vehicle_id": "60", "vehicle_type": "14", "team": "0"}
+{"timestamp": "2025-10-31T15:36:09Z", "type": "island_captured", "island_id": "15", "team_id": "2"}
+{"timestamp": "2025-10-31T15:36:21Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "hold on"}
+{"timestamp": "2025-10-31T15:36:27Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "ama launch the capture seal"}
+{"timestamp": "2025-10-31T15:36:32Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "im getting nearer"}
+{"timestamp": "2025-10-31T15:36:53Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "we can leave it if you want to like the one on the last island"}
+{"timestamp": "2025-10-31T15:37:17Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "it's already in the water"}
+{"timestamp": "2025-10-31T15:37:41Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "we cant leave it"}
+{"timestamp": "2025-10-31T15:38:02Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "ya did leave one on the last island, or did ya forget?"}
+{"timestamp": "2025-10-31T15:38:16Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "we only have two"}
+{"timestamp": "2025-10-31T15:38:30Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "there is a petrel on the barge"}
+{"timestamp": "2025-10-31T15:38:36Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "tru"}
+{"timestamp": "2025-10-31T15:38:38Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "we'll use that to get it back"}
+{"timestamp": "2025-10-31T15:38:42Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "it could pick em up for us"}
+{"timestamp": "2025-10-31T15:38:45Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "well save some time"}
+{"timestamp": "2025-10-31T15:39:00Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "it's not on the barge yet it's on order though"}
+{"timestamp": "2025-10-31T15:39:34Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "yeah there was too much stuff loaded at the warehouse"}
+{"timestamp": "2025-10-31T15:40:09Z", "type": "destroy_vehicle", "vehicle_id": "131", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-10-31T15:42:30Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "mmm to make more we'd need to go way north "}
+{"timestamp": "2025-10-31T15:42:41Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "I recon we should do that"}
+{"timestamp": "2025-10-31T15:42:47Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "to for edgeley"}
+{"timestamp": "2025-10-31T15:42:50Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "so we cant for now"}
+{"timestamp": "2025-10-31T15:43:04Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "mmm"}
+{"timestamp": "2025-10-31T15:43:11Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "Can't we just skip some island?"}
+{"timestamp": "2025-10-31T15:43:54Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "unless we sink some boats no"}
+{"timestamp": "2025-10-31T15:44:02Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "Could try to i guess"}
+{"timestamp": "2025-10-31T15:44:42Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "I'll send some love to the one boat on the island to the left north"}
+{"timestamp": "2025-10-31T15:44:46Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "where to after this"}
+{"timestamp": "2025-10-31T15:45:11Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "I'm saying we need ground units so edgeley"}
+{"timestamp": "2025-10-31T15:45:47Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "ok should i go now or wait"}
+{"timestamp": "2025-10-31T15:46:18Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "barge isn't gonna get us the petrel soon so we should wait for the seal"}
+{"timestamp": "2025-10-31T15:46:32Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "then go"}
+{"timestamp": "2025-10-31T15:47:40Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "seal is gonna come in in about two minutes"}
+{"timestamp": "2025-10-31T15:47:47Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "ok"}
+{"timestamp": "2025-10-31T15:48:14Z", "type": "island_captured", "island_id": "2", "team_id": "1"}
+{"timestamp": "2025-10-31T15:48:32Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "amma make some barges"}
+{"timestamp": "2025-10-31T15:48:39Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "one for now"}
+{"timestamp": "2025-10-31T15:49:07Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "hows it going guys?"}
+{"timestamp": "2025-10-31T15:49:15Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "seal is lining up for docking"}
+{"timestamp": "2025-10-31T15:49:22Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "no lag or anything?"}
+{"timestamp": "2025-10-31T15:49:25Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "nah"}
+{"timestamp": "2025-10-31T15:49:29Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "nice"}
+{"timestamp": "2025-10-31T15:49:30Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "no"}
+{"timestamp": "2025-10-31T15:49:33Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "this is my new server"}
+{"timestamp": "2025-10-31T15:49:39Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "where are you guys located?"}
+{"timestamp": "2025-10-31T15:49:40Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "torpedoes were noised I think"}
+{"timestamp": "2025-10-31T15:49:46Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "snow"}
+{"timestamp": "2025-10-31T15:50:47Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "can i go"}
+{"timestamp": "2025-10-31T15:50:52Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "yea"}
+{"timestamp": "2025-10-31T15:50:55Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "seals in"}
+{"timestamp": "2025-10-31T15:51:24Z", "type": "player_left", "player_name": "deliachin", "player_id": "76561199010901666", "team_id": "1"}
+{"timestamp": "2025-10-31T15:52:18Z", "type": "destroy_vehicle", "vehicle_id": "279", "vehicle_type": "58", "team": "1"}
+{"timestamp": "2025-10-31T15:52:42Z", "type": "destroy_vehicle", "vehicle_id": "280", "vehicle_type": "58", "team": "1"}
+{"timestamp": "2025-10-31T15:52:56Z", "type": "player_joined", "player_name": "deliachin", "player_id": "76561199010901666", "team_id": "1"}
+{"timestamp": "2025-10-31T15:53:24Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "sorry"}
+{"timestamp": "2025-10-31T15:53:31Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "Bout what?"}
+{"timestamp": "2025-10-31T15:54:12Z", "type": "player_left", "player_name": "deliachin", "player_id": "76561199010901666", "team_id": "1"}
+{"timestamp": "2025-10-31T15:54:29Z", "type": "island_captured", "island_id": "13", "team_id": "2"}
+{"timestamp": "2025-10-31T15:57:27Z", "type": "destroy_vehicle", "vehicle_id": "284", "vehicle_type": "58", "team": "2"}
+{"timestamp": "2025-10-31T15:57:35Z", "type": "destroy_vehicle", "vehicle_id": "36", "vehicle_type": "8", "team": "0"}
+{"timestamp": "2025-10-31T15:57:36Z", "type": "destroy_vehicle", "vehicle_id": "52", "vehicle_type": "79", "team": "0"}
+{"timestamp": "2025-10-31T15:57:48Z", "type": "destroy_vehicle", "vehicle_id": "34", "vehicle_type": "12", "team": "0"}
+{"timestamp": "2025-10-31T15:58:28Z", "type": "destroy_vehicle", "vehicle_id": "33", "vehicle_type": "8", "team": "0"}
+{"timestamp": "2025-10-31T15:58:49Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "3 aircraft and swordfish destroyed"}
+{"timestamp": "2025-10-31T15:59:27Z", "type": "destroy_vehicle", "vehicle_id": "283", "vehicle_type": "58", "team": "2"}
+{"timestamp": "2025-10-31T16:03:25Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "ill be back later Bob, have fun :)"}
+{"timestamp": "2025-10-31T16:03:29Z", "type": "player_left", "player_name": "Bredroll", "player_id": "76561198074375146", "team_id": "1"}
+{"timestamp": "2025-10-31T16:03:32Z", "type": "chat", "player_name": "Bob Shwong", "player_id": "76561198327981368", "message": "ok"}
+{"timestamp": "2025-10-31T16:05:21Z", "type": "player_left", "player_name": "Bob Shwong", "player_id": "76561198327981368", "team_id": "1"}
+{"timestamp": "2025-10-31T16:14:24Z", "type": "player_joined", "player_name": "Bredroll", "player_id": "76561198074375146", "team_id": "1"}
+{"timestamp": "2025-10-31T16:14:54Z", "type": "player_left", "player_name": "Bredroll", "player_id": "76561198074375146", "team_id": "1"}

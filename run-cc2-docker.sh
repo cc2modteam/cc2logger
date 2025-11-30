@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-NAME=${1:-server1}
+NAME=${1:-server}
 IMAGE=bredlab/cc2-server:stable
 
 docker rm -f cc2-${NAME} || true

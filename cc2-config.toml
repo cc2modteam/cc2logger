@@ -1,3 +1,6 @@
-run-server = "bash run-cc2-server.sh"
-stop-server = "bash stop-cc2-server.sh"
+run-server = "bash run-cc2-docker.sh"
+stop-server = "bash stop-cc2-docker.sh"
+docker-volume = "carriercommand"
+docker-install-dir = "/carriercommand"
 server-configs-dir = "configs"
+server-install-dir = "/home/inb/cc2-server-install/"

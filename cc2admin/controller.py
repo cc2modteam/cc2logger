@@ -29,7 +29,7 @@ def main():
 
 
 def run(cfg):
-
+    # run the server as-is now
     current_config = read_server_config(Path.cwd() / "server_config.xml")
 
 

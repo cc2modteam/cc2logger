@@ -1,0 +1,3 @@
+run-server = "bash run-cc2-server.sh"
+stop-server = "bash stop-cc2-server.sh"
+server-configs-dir = "configs"

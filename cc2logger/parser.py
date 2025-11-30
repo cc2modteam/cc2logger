@@ -11,6 +11,7 @@ class JsonlParserBase(ABC):
     def __init__(self):
         self.filepath: Optional[Path] = None
         self._fd = None
+        self._rx = ""
 
     def open(self, filepath: Path):
         self.filepath = filepath
@@ -35,12 +36,29 @@ class JsonlParserBase(ABC):
     def on_message(self, data: dict) -> Optional[MessageBase]:
         pass
 
+    def read_chunk(self):
+        chunk = self._fd.readline()
+        if chunk:
+            self._rx += chunk.replace("\n", " ")
+        else:
+            return None
+
+        return self._rx
+
     def read_one(self) -> Optional[MessageBase]:
         if self._fd:
-            chunk = self._fd.readline()
-            if chunk:
-                data = json.loads(chunk)
-                return self.on_message(data)
+            while True:
+                try:
+                    chunk = self.read_chunk()
+                    if chunk is None:
+                        self._rx = ""
+                        break
+                    data = json.loads(chunk)
+                    self._rx = ""
+                    return self.on_message(data)
+                except json.JSONDecodeError:
+                    pass
+
         return None
 
 
@@ -82,6 +100,14 @@ class CC2GameParser(JsonlParserBase):
         for item in Vehicle:
             self.destroyed_stats[item.name] = 0
         self.teams: dict[int, dict[int, Player]] = {}
+
+    def reset(self):
+        self.first_message = None
+        self.last_message = None
+        self.joined.clear()
+        self.players.clear()
+        self.destroyed_stats.clear()
+        self.teams.clear()
 
     @property
     def started(self) -> Optional[datetime]:
@@ -136,3 +162,27 @@ class CC2GameParser(JsonlParserBase):
         for player in self.players.values():
             if player.team > 0:
                 player.update_team_left(self.last_message.timestamp)
+
+
+class CC2GameFollower(CC2GameParser):
+    def __init__(self):
+        super().__init__()
+        self.stop = False
+        self.folder: Optional[Path] = None
+
+    def open_latest(self, folder):
+        self.folder = folder
+        files = sorted(list(self.folder.glob("game_log_*.jsonl")))
+        last = files[-1]
+        self.open(last)
+
+    def read_chunk(self):
+        if self.stop:
+            raise StopIteration()
+        return super().read_chunk()
+
+    def read_one(self) -> Optional[MessageBase]:
+        try:
+            return super().read_one()
+        except StopIteration:
+            self.reset()

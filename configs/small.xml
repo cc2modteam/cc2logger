@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data port="25565" max_players="4" server_name="Carrier Command 2 Small Server" password="" save_name="" island_count="4" island_count_per_team="1" carrier_count_per_team="1" team_count_ai="1" team_count_human="1" base_difficulty="1" loadout_type="0" blueprints="0" game_data_path="rom_0">
+    <permissions>
+        <peer steam_id="76561198074375146" is_banned="false" is_admin="true"/>
+    </permissions>
+	<active_mod_folders/>
+</data>
+

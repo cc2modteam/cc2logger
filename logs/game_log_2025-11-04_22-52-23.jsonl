@@ -1,0 +1,143 @@
+{"timestamp": "2025-11-04T22:52:44Z", "type": "player_joined", "player_name": "Bredroll", "player_id": "76561198074375146", "team_id": "1"}
+{"timestamp": "2025-11-04T22:56:56Z", "type": "destroy_vehicle", "vehicle_id": "127", "vehicle_type": "16", "team": "1"}
+{"timestamp": "2025-11-04T23:04:58Z", "type": "player_left", "player_name": "Bredroll", "player_id": "76561198074375146", "team_id": "1"}
+{"timestamp": "2025-11-05T02:44:43Z", "type": "player_joined", "player_name": "TytusG", "player_id": "76561198040166780", "team_id": "2"}
+{"timestamp": "2025-11-05T02:53:15Z", "type": "destroy_vehicle", "vehicle_id": "40", "vehicle_type": "10", "team": "0"}
+{"timestamp": "2025-11-05T02:56:42Z", "type": "destroy_vehicle", "vehicle_id": "156", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T02:59:24Z", "type": "island_captured", "island_id": "10", "team_id": "4"}
+{"timestamp": "2025-11-05T03:00:16Z", "type": "destroy_vehicle", "vehicle_id": "133", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:02:07Z", "type": "destroy_vehicle", "vehicle_id": "143", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:02:13Z", "type": "destroy_vehicle", "vehicle_id": "159", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T03:02:33Z", "type": "destroy_vehicle", "vehicle_id": "134", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:06:07Z", "type": "destroy_vehicle", "vehicle_id": "131", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:06:07Z", "type": "destroy_vehicle", "vehicle_id": "135", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:06:07Z", "type": "destroy_vehicle", "vehicle_id": "142", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:06:10Z", "type": "destroy_vehicle", "vehicle_id": "147", "vehicle_type": "8", "team": "0"}
+{"timestamp": "2025-11-05T03:10:02Z", "type": "destroy_vehicle", "vehicle_id": "183", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T03:13:12Z", "type": "destroy_vehicle", "vehicle_id": "130", "vehicle_type": "16", "team": "2"}
+{"timestamp": "2025-11-05T03:18:07Z", "type": "destroy_vehicle", "vehicle_id": "141", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:18:07Z", "type": "destroy_vehicle", "vehicle_id": "138", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:18:07Z", "type": "destroy_vehicle", "vehicle_id": "132", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:18:43Z", "type": "destroy_vehicle", "vehicle_id": "166", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:19:01Z", "type": "destroy_vehicle", "vehicle_id": "144", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:19:08Z", "type": "destroy_vehicle", "vehicle_id": "139", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:19:13Z", "type": "destroy_vehicle", "vehicle_id": "140", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T03:19:15Z", "type": "destroy_vehicle", "vehicle_id": "136", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:19:15Z", "type": "destroy_vehicle", "vehicle_id": "137", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:20:42Z", "type": "destroy_vehicle", "vehicle_id": "153", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T03:22:05Z", "type": "destroy_vehicle", "vehicle_id": "152", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:29:21Z", "type": "island_captured", "island_id": "9", "team_id": "4"}
+{"timestamp": "2025-11-05T03:31:02Z", "type": "destroy_vehicle", "vehicle_id": "160", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T03:31:10Z", "type": "destroy_vehicle", "vehicle_id": "157", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:31:20Z", "type": "island_captured", "island_id": "11", "team_id": "2"}
+{"timestamp": "2025-11-05T03:31:37Z", "type": "destroy_vehicle", "vehicle_id": "162", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:34:50Z", "type": "destroy_vehicle", "vehicle_id": "291", "vehicle_type": "58", "team": "2"}
+{"timestamp": "2025-11-05T03:35:04Z", "type": "destroy_vehicle", "vehicle_id": "290", "vehicle_type": "58", "team": "2"}
+{"timestamp": "2025-11-05T03:36:22Z", "type": "destroy_vehicle", "vehicle_id": "201", "vehicle_type": "10", "team": "0"}
+{"timestamp": "2025-11-05T03:36:22Z", "type": "destroy_vehicle", "vehicle_id": "203", "vehicle_type": "8", "team": "0"}
+{"timestamp": "2025-11-05T03:39:46Z", "type": "destroy_vehicle", "vehicle_id": "208", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:39:46Z", "type": "destroy_vehicle", "vehicle_id": "210", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T03:39:46Z", "type": "destroy_vehicle", "vehicle_id": "217", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T03:39:46Z", "type": "destroy_vehicle", "vehicle_id": "204", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:39:46Z", "type": "destroy_vehicle", "vehicle_id": "206", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T03:40:20Z", "type": "destroy_vehicle", "vehicle_id": "219", "vehicle_type": "59", "team": "0"}
+{"timestamp": "2025-11-05T03:40:50Z", "type": "destroy_vehicle", "vehicle_id": "205", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:40:50Z", "type": "destroy_vehicle", "vehicle_id": "212", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T03:43:51Z", "type": "destroy_vehicle", "vehicle_id": "191", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T03:44:10Z", "type": "destroy_vehicle", "vehicle_id": "184", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T03:45:19Z", "type": "player_joined", "player_name": "Max", "player_id": "76561198042320494", "team_id": "1"}
+{"timestamp": "2025-11-05T03:45:51Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "HI"}
+{"timestamp": "2025-11-05T03:46:46Z", "type": "player_left", "player_name": "Max", "player_id": "76561198042320494", "team_id": "1"}
+{"timestamp": "2025-11-05T03:47:18Z", "type": "player_joined", "player_name": "Max", "player_id": "76561198042320494", "team_id": "2"}
+{"timestamp": "2025-11-05T03:48:05Z", "type": "destroy_vehicle", "vehicle_id": "218", "vehicle_type": "59", "team": "0"}
+{"timestamp": "2025-11-05T03:48:26Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "Hey dude"}
+{"timestamp": "2025-11-05T03:48:54Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "how offen does this server restart?"}
+{"timestamp": "2025-11-05T03:49:17Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "you in vr?"}
+{"timestamp": "2025-11-05T03:49:28Z", "type": "chat", "player_name": "TytusG", "player_id": "76561198040166780", "message": "yo"}
+{"timestamp": "2025-11-05T03:49:31Z", "type": "chat", "player_name": "TytusG", "player_id": "76561198040166780", "message": "nah"}
+{"timestamp": "2025-11-05T03:49:34Z", "type": "chat", "player_name": "TytusG", "player_id": "76561198040166780", "message": "hey"}
+{"timestamp": "2025-11-05T03:49:45Z", "type": "chat", "player_name": "TytusG", "player_id": "76561198040166780", "message": "team 2 whats the private chan?"}
+{"timestamp": "2025-11-05T03:49:58Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "i can"}
+{"timestamp": "2025-11-05T03:50:43Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "okay you attack what ever islland and ill air controll aircraft"}
+{"timestamp": "2025-11-05T03:51:00Z", "type": "chat", "player_name": "TytusG", "player_id": "76561198040166780", "message": "cool"}
+{"timestamp": "2025-11-05T03:52:05Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "youu attack with aircraft ill keep a steady amouunt in the air once we get more"}
+{"timestamp": "2025-11-05T03:52:29Z", "type": "player_joined", "player_name": "Cruddy.Buddy", "player_id": "76561198889130441", "team_id": "2"}
+{"timestamp": "2025-11-05T03:53:38Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "hold on deck"}
+{"timestamp": "2025-11-05T03:55:21Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "i got y"}
+{"timestamp": "2025-11-05T03:55:23Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "u"}
+{"timestamp": "2025-11-05T03:57:01Z", "type": "destroy_vehicle", "vehicle_id": "23", "vehicle_type": "12", "team": "2"}
+{"timestamp": "2025-11-05T03:57:14Z", "type": "chat", "player_name": "Cruddy.Buddy", "player_id": "76561198889130441", "message": "ran outa fuel"}
+{"timestamp": "2025-11-05T03:57:15Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "wasnt me"}
+{"timestamp": "2025-11-05T03:57:18Z", "type": "chat", "player_name": "Cruddy.Buddy", "player_id": "76561198889130441", "message": "I told it to land"}
+{"timestamp": "2025-11-05T03:57:26Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "never mind loll"}
+{"timestamp": "2025-11-05T03:57:33Z", "type": "chat", "player_name": "Cruddy.Buddy", "player_id": "76561198889130441", "message": "ima use one to attack the island"}
+{"timestamp": "2025-11-05T03:57:41Z", "type": "player_left", "player_name": "Max", "player_id": "76561198042320494", "team_id": "2"}
+{"timestamp": "2025-11-05T03:57:46Z", "type": "player_left", "player_name": "TytusG", "player_id": "76561198040166780", "team_id": "2"}
+{"timestamp": "2025-11-05T03:58:04Z", "type": "player_joined", "player_name": "Max", "player_id": "76561198042320494", "team_id": "1"}
+{"timestamp": "2025-11-05T03:58:08Z", "type": "chat", "player_name": "Cruddy.Buddy", "player_id": "76561198889130441", "message": "wth"}
+{"timestamp": "2025-11-05T03:58:35Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "dude was crazy"}
+{"timestamp": "2025-11-05T03:58:46Z", "type": "destroy_vehicle", "vehicle_id": "200", "vehicle_type": "12", "team": "0"}
+{"timestamp": "2025-11-05T03:58:57Z", "type": "destroy_vehicle", "vehicle_id": "202", "vehicle_type": "14", "team": "0"}
+{"timestamp": "2025-11-05T03:59:22Z", "type": "island_captured", "island_id": "7", "team_id": "4"}
+{"timestamp": "2025-11-05T03:59:22Z", "type": "destroy_vehicle", "vehicle_id": "220", "vehicle_type": "59", "team": "0"}
+{"timestamp": "2025-11-05T03:59:32Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "]"}
+{"timestamp": "2025-11-05T03:59:32Z", "type": "destroy_vehicle", "vehicle_id": "213", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T03:59:42Z", "type": "player_left", "player_name": "Max", "player_id": "76561198042320494", "team_id": "1"}
+{"timestamp": "2025-11-05T04:00:01Z", "type": "destroy_vehicle", "vehicle_id": "216", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T04:00:47Z", "type": "player_joined", "player_name": "Max", "player_id": "76561198042320494", "team_id": "2"}
+{"timestamp": "2025-11-05T04:01:43Z", "type": "destroy_vehicle", "vehicle_id": "207", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T04:02:00Z", "type": "destroy_vehicle", "vehicle_id": "215", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T04:02:02Z", "type": "destroy_vehicle", "vehicle_id": "211", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T04:02:04Z", "type": "destroy_vehicle", "vehicle_id": "209", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T04:02:05Z", "type": "destroy_vehicle", "vehicle_id": "214", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T04:02:43Z", "type": "chat", "player_name": "Cruddy.Buddy", "player_id": "76561198889130441", "message": "looks ready to send virus bot in"}
+{"timestamp": "2025-11-05T04:02:56Z", "type": "chat", "player_name": "Max", "player_id": "76561198042320494", "message": "carrier weaponms online#"}
+{"timestamp": "2025-11-05T04:03:21Z", "type": "chat", "player_name": "Cruddy.Buddy", "player_id": "76561198889130441", "message": "should we just send 1 in ane leave it"}
+{"timestamp": "2025-11-05T04:03:39Z", "type": "chat", "player_name": "Cruddy.Buddy", "player_id": "76561198889130441", "message": "I dont think any more enemies will show up right"}
+{"timestamp": "2025-11-05T04:06:49Z", "type": "destroy_vehicle", "vehicle_id": "154", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T04:10:13Z", "type": "destroy_vehicle", "vehicle_id": "149", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T04:10:53Z", "type": "island_captured", "island_id": "20", "team_id": "2"}
+{"timestamp": "2025-11-05T04:12:03Z", "type": "destroy_vehicle", "vehicle_id": "3", "vehicle_type": "16", "team": "1"}
+{"timestamp": "2025-11-05T04:12:03Z", "type": "destroy_vehicle", "vehicle_id": "4", "vehicle_type": "57", "team": "1"}
+{"timestamp": "2025-11-05T04:12:04Z", "type": "destroy_vehicle", "vehicle_id": "5", "vehicle_type": "2", "team": "1"}
+{"timestamp": "2025-11-05T04:12:05Z", "type": "destroy_vehicle", "vehicle_id": "6", "vehicle_type": "2", "team": "1"}
+{"timestamp": "2025-11-05T04:12:05Z", "type": "destroy_vehicle", "vehicle_id": "7", "vehicle_type": "2", "team": "1"}
+{"timestamp": "2025-11-05T04:12:06Z", "type": "destroy_vehicle", "vehicle_id": "8", "vehicle_type": "2", "team": "1"}
+{"timestamp": "2025-11-05T04:12:06Z", "type": "destroy_vehicle", "vehicle_id": "9", "vehicle_type": "8", "team": "1"}
+{"timestamp": "2025-11-05T04:12:07Z", "type": "destroy_vehicle", "vehicle_id": "10", "vehicle_type": "8", "team": "1"}
+{"timestamp": "2025-11-05T04:12:07Z", "type": "destroy_vehicle", "vehicle_id": "11", "vehicle_type": "12", "team": "1"}
+{"timestamp": "2025-11-05T04:12:08Z", "type": "destroy_vehicle", "vehicle_id": "12", "vehicle_type": "12", "team": "1"}
+{"timestamp": "2025-11-05T04:12:08Z", "type": "destroy_vehicle", "vehicle_id": "128", "vehicle_type": "4", "team": "1"}
+{"timestamp": "2025-11-05T04:12:09Z", "type": "destroy_vehicle", "vehicle_id": "129", "vehicle_type": "4", "team": "1"}
+{"timestamp": "2025-11-05T04:12:09Z", "type": "destroy_vehicle", "vehicle_id": "2", "vehicle_type": "0", "team": "1"}
+{"timestamp": "2025-11-05T04:13:04Z", "type": "chat", "player_name": "Cruddy.Buddy", "player_id": "76561198889130441", "message": "ima go gl"}
+{"timestamp": "2025-11-05T04:13:15Z", "type": "player_left", "player_name": "Cruddy.Buddy", "player_id": "76561198889130441", "team_id": "2"}
+{"timestamp": "2025-11-05T04:15:20Z", "type": "destroy_vehicle", "vehicle_id": "294", "vehicle_type": "58", "team": "2"}
+{"timestamp": "2025-11-05T04:15:51Z", "type": "destroy_vehicle", "vehicle_id": "295", "vehicle_type": "58", "team": "2"}
+{"timestamp": "2025-11-05T04:16:38Z", "type": "destroy_vehicle", "vehicle_id": "145", "vehicle_type": "12", "team": "0"}
+{"timestamp": "2025-11-05T04:17:20Z", "type": "destroy_vehicle", "vehicle_id": "146", "vehicle_type": "8", "team": "0"}
+{"timestamp": "2025-11-05T04:17:31Z", "type": "destroy_vehicle", "vehicle_id": "199", "vehicle_type": "79", "team": "0"}
+{"timestamp": "2025-11-05T04:18:57Z", "type": "destroy_vehicle", "vehicle_id": "148", "vehicle_type": "14", "team": "0"}
+{"timestamp": "2025-11-05T04:19:21Z", "type": "destroy_vehicle", "vehicle_id": "198", "vehicle_type": "79", "team": "0"}
+{"timestamp": "2025-11-05T04:21:44Z", "type": "destroy_vehicle", "vehicle_id": "163", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T04:22:58Z", "type": "destroy_vehicle", "vehicle_id": "164", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T04:22:58Z", "type": "destroy_vehicle", "vehicle_id": "151", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T04:24:54Z", "type": "destroy_vehicle", "vehicle_id": "17", "vehicle_type": "2", "team": "2"}
+{"timestamp": "2025-11-05T04:24:58Z", "type": "destroy_vehicle", "vehicle_id": "167", "vehicle_type": "59", "team": "0"}
+{"timestamp": "2025-11-05T04:25:03Z", "type": "destroy_vehicle", "vehicle_id": "168", "vehicle_type": "59", "team": "0"}
+{"timestamp": "2025-11-05T04:25:07Z", "type": "destroy_vehicle", "vehicle_id": "161", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T04:25:11Z", "type": "destroy_vehicle", "vehicle_id": "19", "vehicle_type": "2", "team": "2"}
+{"timestamp": "2025-11-05T04:26:07Z", "type": "destroy_vehicle", "vehicle_id": "158", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T04:26:10Z", "type": "destroy_vehicle", "vehicle_id": "150", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T04:26:20Z", "type": "destroy_vehicle", "vehicle_id": "155", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T04:26:24Z", "type": "destroy_vehicle", "vehicle_id": "165", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T04:30:07Z", "type": "island_captured", "island_id": "36", "team_id": "2"}
+{"timestamp": "2025-11-05T04:33:05Z", "type": "destroy_vehicle", "vehicle_id": "296", "vehicle_type": "58", "team": "2"}
+{"timestamp": "2025-11-05T04:33:06Z", "type": "destroy_vehicle", "vehicle_id": "297", "vehicle_type": "58", "team": "2"}
+{"timestamp": "2025-11-05T04:33:43Z", "type": "island_captured", "island_id": "25", "team_id": "4"}
+{"timestamp": "2025-11-05T04:38:36Z", "type": "player_left", "player_name": "Max", "player_id": "76561198042320494", "team_id": "2"}
+{"timestamp": "2025-11-05T12:56:04Z", "type": "player_joined", "player_name": "中国好骚年", "player_id": "76561199046410592", "team_id": "2"}
+{"timestamp": "2025-11-05T12:59:29Z", "type": "destroy_vehicle", "vehicle_id": "181", "vehicle_type": "2", "team": "0"}
+{"timestamp": "2025-11-05T12:59:33Z", "type": "destroy_vehicle", "vehicle_id": "185", "vehicle_type": "4", "team": "0"}
+{"timestamp": "2025-11-05T13:01:58Z", "type": "destroy_vehicle", "vehicle_id": "22", "vehicle_type": "8", "team": "2"}
+{"timestamp": "2025-11-05T13:05:45Z", "type": "player_left", "player_name": "中国好骚年", "player_id": "76561199046410592", "team_id": "2"}

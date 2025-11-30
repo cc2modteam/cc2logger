@@ -3,6 +3,8 @@
 {"timestamp": "2025-10-31T15:09:36Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "hi"}
 {"timestamp": "2025-10-31T15:12:37Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "dont turn on wepions until we get there"}
 {"timestamp": "2025-10-31T15:13:25Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "you want to fly?"}
+{"timestamp": "2025-10-31T15:13:25Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "test with a 
+newline inside"}
 {"timestamp": "2025-10-31T15:13:43Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "no last time i crashed"}
 {"timestamp": "2025-10-31T15:14:30Z", "type": "chat", "player_name": "deliachin", "player_id": "76561199010901666", "message": "we are here"}
 {"timestamp": "2025-10-31T15:14:48Z", "type": "destroy_vehicle", "vehicle_id": "29", "vehicle_type": "2", "team": "0"}

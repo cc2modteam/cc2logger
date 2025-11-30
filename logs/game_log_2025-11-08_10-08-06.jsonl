@@ -1,0 +1,19 @@
+{"timestamp": "2025-11-08T11:24:15Z", "type": "player_joined", "player_name": "Bredroll", "player_id": "76561198074375146", "team_id": "1"}
+{"timestamp": "2025-11-08T11:24:41Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "test"}
+{"timestamp": "2025-11-08T11:24:47Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "'test"}
+{"timestamp": "2025-11-08T11:24:53Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "%20"}
+{"timestamp": "2025-11-08T11:24:56Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "#"}
+{"timestamp": "2025-11-08T11:24:58Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": ">"}
+{"timestamp": "2025-11-08T11:24:59Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "<"}
+{"timestamp": "2025-11-08T11:25:05Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "&gt;"}
+{"timestamp": "2025-11-08T11:25:13Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "    x"}
+{"timestamp": "2025-11-08T11:25:20Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "`foo`"}
+{"timestamp": "2025-11-08T11:25:27Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "\t"}
+{"timestamp": "2025-11-08T11:25:33Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "}"}
+{"timestamp": "2025-11-08T11:25:46Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "@"}
+{"timestamp": "2025-11-08T11:25:50Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "%"}
+{"timestamp": "2025-11-08T11:26:07Z", "type": "chat", "player_name": "Bredroll", "player_id": "76561198074375146", "message": "foo
+bar"}
+{"timestamp": "2025-11-08T11:29:06Z", "type": "player_left", "player_name": "Bredroll", "player_id": "76561198074375146", "team_id": "1"}
+{"timestamp": "2025-11-08T11:43:41Z", "type": "player_joined", "player_name": "海因茨·威廉·古德里安", "player_id": "76561199200659002", "team_id": "1"}
+{"timestamp": "2025-11-08T11:47:20Z", "type": "player_left", "player_name": "海因茨·威廉·古德里安", "player_id": "76561199200659002", "team_id": "1"}

@@ -20,6 +20,6 @@ git -C carrier-command-docker checkout -f bredlab
     -d local \
     -o type=none \
     -o o=bind \
-    -o device=${CC2_INSTALL} carrier-command
+    -o device=${CC2_INSTALL} carriercommand
   make STEAM_USERNAME=iannorton
 )

@@ -1,8 +1,11 @@
 import json
+import subprocess
 from datetime import datetime, timedelta
 from abc import abstractmethod, ABC
 from typing import Optional
 from pathlib import Path
+from textwrap import dedent
+from io import StringIO
 from .resolver import Vehicle
 from .messages import MessageBase, MessageFactory, PlayerJoined, PlayerLeft, CapturedIsland, DestroyedVehicle
 
@@ -78,6 +81,13 @@ class Player:
             self.teams = {self.team: team_timespan}
         else:
             self.teams[self.team] += team_timespan
+
+    @property
+    def total_playtime(self):
+        total = 0
+        for value in self.teams.values():
+            total += value.total_seconds()
+        return total
 
     def __repr__(self):
         return str(self)
@@ -163,6 +173,12 @@ class CC2GameParser(JsonlParserBase):
             if player.team > 0:
                 player.update_team_left(self.last_message.timestamp)
 
+    def read_path(self, folder: Path) -> None:
+        files = sorted(list(folder.glob("game_log_*.jsonl")))
+        self.reset()
+        for x in files:
+            self.read(x)
+
 
 class CC2GameFollower(CC2GameParser):
     def __init__(self):
@@ -186,3 +202,44 @@ class CC2GameFollower(CC2GameParser):
             return super().read_one()
         except StopIteration:
             self.reset()
+
+
+def generate_lua_stats_page(p: CC2GameParser) -> str:
+
+    buf = StringIO()
+    print(dedent("""
+        if g_man_pages == nil then
+            g_man_pages = {}
+        end
+        table.insert(g_man_pages, {
+        """), file=buf)
+
+    print(dedent("""
+    title = "Server Stats",
+    content = {
+    """), file=buf)
+    print(""" { "h", "First Started" }, """, file=buf)
+    print(f""" "{p.first_message.timestamp}", """, file=buf)
+    print(""" { "h", "Runtime" }, """, file=buf)
+    print(f""" "{int(p.duration.total_seconds() / 60):-5} mins", """, file=buf)
+    print(""" { "h", "Past Players" }, """, file=buf)
+    for steamid, player in sorted(p.players.items(), reverse=True, key=lambda x: x[1].total_playtime):
+        print(f""""{int(player.total_playtime / 60):4} mins {player.player_name}", """, file=buf)
+    print(""" { "h", "Islands Captured" }, """, file=buf)
+    print(f""" "{p.island_captures}", """, file=buf)
+    print(""" { "h", "Units Destroyed" }, """, file=buf)
+    print(f""" "total - {sum(p.destroyed_stats.values()):-4}", """, file=buf)
+    for name in sorted(p.destroyed_stats.keys()):
+        count = p.destroyed_stats[name]
+        if count:
+            print(f""" " {name:16}: {count:-4}", """, file=buf)
+
+    print("}})", file=buf)
+    lua = buf.getvalue()
+
+    proc = subprocess.Popen("lua5.3", stdin=subprocess.PIPE, stderr=subprocess.STDOUT, stdout=subprocess.PIPE,
+                            encoding="utf-8")
+    result = proc.communicate(lua)
+    if result[0] == "":
+        return lua
+    return ""

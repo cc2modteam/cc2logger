@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 
-from cc2logger.parser import CC2GameFollower
+from cc2logger.parser import CC2GameFollower, CC2GameParser, generate_lua_stats_page
 from cc2logger.messages import PlayerChat
 
 CFG = Path.cwd() / "cc2-config.toml"
@@ -117,6 +117,7 @@ def run(cfg):
     cfg_xml = server_dir / XML_CFG
 
     change_config(cfg, "default")
+    last_stats_update = 0
 
     while True:
         run_server(cfg, cfg_xml)
@@ -144,6 +145,11 @@ def run(cfg):
                 if str(msg.player_id) in admin_users:
                     do_admin_command(msg, cfg, follower)
 
+            if time.monotonic() - last_stats_update > 120:
+                last_stats_update = time.monotonic()
+                gather_player_stats(cfg)
+
+
 
 def do_admin_command(msg, cfg, follower):
     if msg.message.startswith("/"):
@@ -161,3 +167,16 @@ def do_admin_command(msg, cfg, follower):
             elif cmd == "shutdown":
                 stop_server(cfg)
                 sys.exit(0)
+
+
+def gather_player_stats(cfg):
+    server_dir = Path(cfg["server-install-dir"])
+    parser = CC2GameParser()
+    logs_dir = server_dir / "logs"
+    parser.read_path(logs_dir)
+
+    server_stats_lua = generate_lua_stats_page(parser)
+    if server_stats_lua:
+        custom9 = Path("rom_0") / "scripts" / "library_custom_9.lua"
+        docker_volume_exec(cfg["docker-volume"],
+                           ["tee", str(custom9)])

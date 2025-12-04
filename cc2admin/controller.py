@@ -171,12 +171,13 @@ def do_admin_command(msg, cfg, follower):
 
 def gather_player_stats(cfg):
     server_dir = Path(cfg["server-install-dir"])
+    print("generating server stats ..")
     parser = CC2GameParser()
     logs_dir = server_dir / "logs"
     parser.read_path(logs_dir)
 
     server_stats_lua = generate_lua_stats_page(parser)
     if server_stats_lua:
-        custom9 = Path("rom_0") / "scripts" / "library_custom_9.lua"
+        print(f"stats ({len(server_stats_lua)} bytes")
         docker_volume_exec(cfg["docker-volume"],
-                           ["tee", str(custom9)])
+                           ["tee", "rom_0/scripts/library_custom_9.lua"])

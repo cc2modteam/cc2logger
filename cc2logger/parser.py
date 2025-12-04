@@ -230,7 +230,7 @@ def generate_lua_stats_page(p: CC2GameParser) -> str:
     print(""" { "h", "Units Destroyed" }, """, file=buf)
     print(f""" "total - {sum(p.destroyed_stats.values()):-4}", """, file=buf)
     for name in sorted(p.destroyed_stats.keys()):
-        count = p.destroyed_stats[name]
+        count = p.destroyed_stats.get(name, 0)
         if count:
             print(f""" " {name:16}: {count:-4}", """, file=buf)
 

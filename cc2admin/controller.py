@@ -180,4 +180,5 @@ def gather_player_stats(cfg):
     if server_stats_lua:
         print(f"stats ({len(server_stats_lua)} bytes")
         docker_volume_exec(cfg["docker-volume"],
-                           ["tee", "rom_0/scripts/library_custom_9.lua"])
+                           ["tee", "rom_0/scripts/library_custom_9.lua"],
+                           server_stats_lua)

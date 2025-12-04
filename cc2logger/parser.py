@@ -164,7 +164,10 @@ class CC2GameParser(JsonlParserBase):
             elif isinstance(message, CapturedIsland):
                 self.island_captures += 1
             elif isinstance(message, DestroyedVehicle):
-                self.destroyed_stats[message.vehicle_type_name] += 1
+                if message.vehicle_type_name not in self.destroyed_stats:
+                    self.destroyed_stats[message.vehicle_type_name] = 1
+                else:
+                    self.destroyed_stats[message.vehicle_type_name] += 1
         return message
 
     def read(self, filepath: Path) -> None:

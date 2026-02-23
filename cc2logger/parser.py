@@ -1,5 +1,6 @@
 import json
 import subprocess
+import time
 from datetime import datetime, timedelta
 from abc import abstractmethod, ABC
 from typing import Optional
@@ -188,11 +189,20 @@ class CC2GameFollower(CC2GameParser):
         super().__init__()
         self.stop = False
         self.folder: Optional[Path] = None
+        self.latest_file: Optional[Path] = None
+        self.checked_latest = 0
+        self.check_latest_interval = 30
+
+    def get_files(self) -> list[Path]:
+        files = sorted(list(self.folder.glob("game_log_*.jsonl")))
+        return files
 
     def open_latest(self, folder):
         self.folder = folder
-        files = sorted(list(self.folder.glob("game_log_*.jsonl")))
+        files = self.get_files()
         last = files[-1]
+        self.latest_file = last
+        self.checked_latest = time.monotonic()
         self.open(last)
 
     def read_chunk(self):
@@ -201,6 +211,13 @@ class CC2GameFollower(CC2GameParser):
         return super().read_chunk()
 
     def read_one(self) -> Optional[MessageBase]:
+
+        now = time.monotonic()
+        elapsed = now - self.checked_latest
+        if elapsed > self.check_latest_interval:
+            self.close()
+            self.open_latest(self.folder)
+
         try:
             return super().read_one()
         except StopIteration:

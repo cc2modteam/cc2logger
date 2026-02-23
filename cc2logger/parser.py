@@ -256,10 +256,13 @@ def generate_lua_stats_page(p: CC2GameParser) -> str:
 
     print("}})", file=buf)
     lua = buf.getvalue()
-
-    proc = subprocess.Popen("lua5.3", stdin=subprocess.PIPE, stderr=subprocess.STDOUT, stdout=subprocess.PIPE,
-                            encoding="utf-8")
-    result = proc.communicate(lua)
-    if result[0] == "":
+    try:
+        proc = subprocess.Popen("lua5.3", stdin=subprocess.PIPE, stderr=subprocess.STDOUT, stdout=subprocess.PIPE,
+                                encoding="utf-8")
+        result = proc.communicate(lua)
+        if result[0] == "":
+            return lua
+        return ""
+    except FileNotFoundError as err:
+        print(f"cannot run lua5.3, {err}")
         return lua
-    return ""

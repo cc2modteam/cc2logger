@@ -1,4 +1,5 @@
 import json
+import os
 import subprocess
 import time
 from datetime import datetime, timedelta
@@ -264,5 +265,7 @@ def generate_lua_stats_page(p: CC2GameParser) -> str:
             return lua
         return ""
     except FileNotFoundError as err:
-        print(f"cannot run lua5.3, {err}")
+        if "BAD_LUA" not in os.environ:
+            print(f"cannot run lua5.3, {err}")
+            os.environ["BAD_LUA"] = "1"
         return lua

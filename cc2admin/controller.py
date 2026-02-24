@@ -171,10 +171,16 @@ class ServerController:
         self.stop()
         print("Starting server")
         output = self.server_output.open("ab")
-        cmdline = f"{self.get_runner()} dedicated_server.exe".strip()
+        shell = False
+        runner = self.get_runner()
+        if runner:
+            shell = True
+            cmdline = f"{runner} dedicated_server.exe".strip()
+        else:
+            cmdline = ["dedicated_server.exe"]
         self.server_process = subprocess.Popen(cmdline,
                                                cwd=str(self.game_folder),
-                                               shell=True,
+                                               shell=shell,
                                                stderr=subprocess.STDOUT,
                                                stdout=output)
         time.sleep(5)

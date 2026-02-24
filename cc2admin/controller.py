@@ -228,8 +228,8 @@ class ChatThread(Thread):
         while not self.quit:
 
             elapsed = time.monotonic() - last_stats
-            last_stats = time.monotonic()
             if elapsed > stats_interval:
+                last_stats = time.monotonic()
                 gather_player_stats(self.controller.game_folder)
 
             try:
@@ -237,6 +237,7 @@ class ChatThread(Thread):
                 if not msg:
                     time.sleep(2)
                     continue
+                print(type(msg))
                 if isinstance(msg, PlayerChat):
                     prefix = " "
                     admin = str(msg.player_id) in self.controller.admin_users

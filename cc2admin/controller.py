@@ -24,6 +24,7 @@ XML_CFG = "server_config.xml"
 parser = ArgumentParser(description=__doc__)
 parser.add_argument("--game-dir", type=Path, default=Path("Carrier Command 2"), help="Directory to the cc2 installation")
 parser.add_argument("--config", type=str, help="Switch config file")
+parser.add_argument("--debug", default=False, action="store_true")
 
 
 def read_server_config(server_config: Path) -> dict:
@@ -60,6 +61,8 @@ def read_server_config(server_config: Path) -> dict:
 def main():
     opts = parser.parse_args()
     os.chdir(opts.game_dir)
+    if opts.debug:
+        os.environ["DEBUG"] = "1"
     controller = ServerController(Path.cwd())
 
     if opts.config:
@@ -78,6 +81,10 @@ def get_admin_users(active_config: dict):
     return active_config.get("admin_users", set())
 
 
+def debug(msg):
+    if "DEBUG" in os.environ:
+        print(msg)
+
 
 def gather_player_stats(game_dir: Path):
     print("generating server stats ..")
@@ -90,7 +97,7 @@ def gather_player_stats(game_dir: Path):
     if rev_mod.exists():
         server_stats_lua = generate_lua_stats_page(parser)
         if server_stats_lua:
-            print(f"stats ({len(server_stats_lua)} bytes)")
+            debug(f"stats ({len(server_stats_lua)} bytes)")
             (rev_mod / "library_custom_9.lua").write_bytes(server_stats_lua.encode("utf-8"))
 
 
@@ -198,6 +205,7 @@ class ServerController:
             print(f"Admin: {admin}")
 
         self.follower = CC2GameFollower()
+        self.follower.debug_enabled = "DEBUG" in os.environ
         self.follower.open_latest(self.game_folder / "logs")
         self.chat_thread = ChatThread(self)
         self.chat_thread.start()
@@ -224,7 +232,7 @@ class ChatThread(Thread):
     def run(self):
         last_stats = 0
         stats_interval = 600
-
+        print("--")
         while not self.quit:
 
             elapsed = time.monotonic() - last_stats
@@ -237,7 +245,7 @@ class ChatThread(Thread):
                 if not msg:
                     time.sleep(2)
                     continue
-                print(type(msg))
+                debug(f"{type(msg)}, {str(msg)}")
                 if isinstance(msg, PlayerChat):
                     prefix = " "
                     admin = str(msg.player_id) in self.controller.admin_users

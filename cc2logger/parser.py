@@ -109,11 +109,17 @@ class CC2GameParser(JsonlParserBase):
         self.players: dict[int, Player] = {}
         self.island_captures = 0
         self.destroyed_stats = {}
+        self.debug_enabled = False
         for item in Vehicle:
             self.destroyed_stats[item.name] = 0
         self.teams: dict[int, dict[int, Player]] = {}
 
+    def debug(self, msg):
+        if self.debug_enabled:
+            print(f"debug> {msg}")
+
     def reset(self):
+        self.debug("reset parser")
         self.first_message = None
         self.last_message = None
         self.joined.clear()
@@ -197,6 +203,7 @@ class CC2GameFollower(CC2GameParser):
 
     def get_files(self) -> list[Path]:
         files = sorted(list(self.folder.glob("game_log_*.jsonl")))
+        self.debug(f"{len(files)} game logs in {self.folder}")
         return files
 
     def open_latest(self, folder):
@@ -205,25 +212,34 @@ class CC2GameFollower(CC2GameParser):
         last = self.files[-1]
         self.latest_file = last
         self.checked_latest = time.monotonic()
+        self.debug(f"opening latest log: {last}")
         self.open(last)
 
     def read_chunk(self):
+        self.debug(f"read_chunk() fd={self._fd}")
         if self.stop:
             raise StopIteration()
-        return super().read_chunk()
+        resp = super().read_chunk()
+        self.debug(f"got {resp}")
+        return resp
 
     def read_one(self) -> Optional[MessageBase]:
-
+        self.debug(f"read_one() {self._fd.tell()}")
         now = time.monotonic()
         elapsed = now - self.checked_latest
         if elapsed > self.check_latest_interval:
+            self.debug("checking for new logs")
+            self.checked_latest = now
             if self.files != self.get_files():
+                print("new game log found, following..")
                 # new file, perhaps game ended and restarted
                 self.close()
                 self.open_latest(self.folder)
 
         try:
-            return super().read_one()
+            data = super().read_one()
+            self.debug(f"got: {data}")
+            return data
         except StopIteration:
             self.reset()
 

@@ -193,6 +193,7 @@ class CC2GameFollower(CC2GameParser):
         self.latest_file: Optional[Path] = None
         self.checked_latest = 0
         self.check_latest_interval = 30
+        self.files = []
 
     def get_files(self) -> list[Path]:
         files = sorted(list(self.folder.glob("game_log_*.jsonl")))
@@ -200,8 +201,8 @@ class CC2GameFollower(CC2GameParser):
 
     def open_latest(self, folder):
         self.folder = folder
-        files = self.get_files()
-        last = files[-1]
+        self.files = self.get_files()
+        last = self.files[-1]
         self.latest_file = last
         self.checked_latest = time.monotonic()
         self.open(last)
@@ -216,8 +217,10 @@ class CC2GameFollower(CC2GameParser):
         now = time.monotonic()
         elapsed = now - self.checked_latest
         if elapsed > self.check_latest_interval:
-            self.close()
-            self.open_latest(self.folder)
+            if self.files != self.get_files():
+                # new file, perhaps game ended and restarted
+                self.close()
+                self.open_latest(self.folder)
 
         try:
             return super().read_one()

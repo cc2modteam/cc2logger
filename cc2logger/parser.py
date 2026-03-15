@@ -264,7 +264,7 @@ def generate_lua_stats_page(p: CC2GameParser) -> str:
     print(f""" "{int(p.duration.total_seconds() / 60):-5} mins", """, file=buf)
     print(""" { "h", "Past Players" }, """, file=buf)
     for steamid, player in sorted(p.players.items(), reverse=True, key=lambda x: x[1].total_playtime):
-        print(f""""{int(player.total_playtime / 60):4} mins {player.player_name}", """, file=buf)
+        print(f"""" {player.player_name}", """, file=buf)
     print(""" { "h", "Islands Captured" }, """, file=buf)
     print(f""" "{p.island_captures}", """, file=buf)
     print(""" { "h", "Units Destroyed" }, """, file=buf)

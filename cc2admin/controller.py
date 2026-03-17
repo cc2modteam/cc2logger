@@ -5,16 +5,18 @@ import os
 import platform
 import sys
 import time
+import yaml
 import subprocess
-import xml.etree.ElementTree as ET
 from threading import Thread
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Tuple
 from argparse import ArgumentParser
+
 
 from cc2logger.parser import CC2GameFollower, CC2GameParser, generate_lua_stats_page
 from cc2logger.messages import PlayerChat
+from cc2admin.servercfgfile import ServerConfigXml, CfgPermissionPeer
 
 CFG = Path.cwd() / "cc2-config.toml"
 
@@ -27,36 +29,17 @@ parser.add_argument("--config", type=str, help="Switch config file")
 parser.add_argument("--debug", default=False, action="store_true")
 
 
-def read_server_config(server_config: Path) -> dict:
+def read_server_config(server_config: Path) -> Tuple[dict, ServerConfigXml]:
     settings = {}
-    tree = ET.parse(server_config)
-    root = tree.getroot()
-    exclude = {"password", "game_data_path", "port"}
-    for name, value in root.attrib.items():
-        if name.lower() not in exclude:
-            try:
-                value = int(value, 10)
-            except ValueError:
-                pass
-            settings[name] = value
 
-    settings["admin_users"] = set()
-    settings["mods"] = set()
-    settings["server_name"] = root.attrib.get("server_name")
+    cfg = ServerConfigXml()
+    cfg.from_xml(server_config.read_bytes())
 
-    for item in root:
-        if isinstance(item, ET.Element):
-            if item.tag == "permissions":
-                for child in item:
-                    if child.tag == "peer":
-                        ident = child.attrib.get("steam_id")
-                        if child.attrib.get("is_admin").lower() == "true":
-                            settings["admin_users"].add(ident)
-            if item.tag == "active_mod_folders":
-                for child in item:
-                    settings["mods"].add(child.attrib.get("value"))
+    settings["admin_users"] = set(cfg.get_admins())
+    settings["mods"] = set(cfg.get_mods())
+    settings["server_name"] = cfg.server_name
 
-    return settings
+    return settings, cfg
 
 def main():
     opts = parser.parse_args()
@@ -109,10 +92,28 @@ class ServerController:
         self.server_xml: Path = self.game_folder / "server_config.xml"
         self.server_configs: Path = game_folder / "configs"
         self.follower: Optional[CC2GameFollower] = None
-        self.current_server_config = read_server_config(self.server_xml)
+        self.current_server_config, self.server_cfg = read_server_config(self.server_xml)
         self.chat_thread: Optional[ChatThread] = None
         self.quit = False
         self.linux_pid = -1
+
+    def get_admin_yml(self) -> dict:
+        admin_yml = self.game_folder / "admin.yml"
+        d = {}
+        if admin_yml.exists():
+            with admin_yml.open("r") as yy:
+                d = yaml.safe_load(yy)
+        return d
+
+
+    def get_global_admins(self) -> list[int]:
+        d = self.get_admin_yml()
+        return d.get("admin-users", {}).keys()
+
+    def get_runner_cfg(self) -> str:
+        d = self.get_admin_yml()
+        return d.get("runner-script", {}).get(platform.system(), "")
+
 
     def get_pid(self) -> int:
         if not is_linux():
@@ -143,14 +144,12 @@ class ServerController:
             time.sleep(1)
 
     def get_runner(self) -> str:
-        if is_linux():
-            return os.environ.get("CC2_SERVER_RUNNER", "") + " "
-        return ""
+        return self.get_runner_cfg()
 
     def apply_config(self, name: str) -> None:
         new_cfg = self.server_configs / f"{name}.xml"
         self.server_xml.write_bytes(new_cfg.read_bytes())
-        self.current_server_config = read_server_config(self.server_xml)
+        self.current_server_config, self.server_cfg = read_server_config(self.server_xml)
 
     @property
     def admin_users(self) -> set:
@@ -185,6 +184,15 @@ class ServerController:
             cmdline = f"{runner} dedicated_server.exe".strip()
         else:
             cmdline = ["dedicated_server.exe"]
+
+        # configure admins
+        self.current_server_config, self.server_cfg = read_server_config(self.server_xml)
+        for admin in self.get_global_admins():
+            if admin not in self.server_cfg.get_peers():
+                p = self.server_cfg.add_peer(admin)
+                p.is_admin = True
+        self.server_xml.write_bytes(self.server_cfg.to_xml())
+        self.current_server_config, self.server_cfg = read_server_config(self.server_xml)
         self.server_process = subprocess.Popen(cmdline,
                                                cwd=str(self.game_folder),
                                                shell=shell,
@@ -197,7 +205,8 @@ class ServerController:
         else:
             print(f"PID = {self.server_process.pid}")
 
-        self.current_server_config = read_server_config(self.server_xml)
+        self.current_server_config, self.server_cfg = read_server_config(self.server_xml)
+
         print(f"Server: {self.current_server_config['server_name']}")
         for mod in self.current_server_config.get("mods"):
             print(f"Mod Folder: {mod}")

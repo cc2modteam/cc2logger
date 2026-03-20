@@ -12,11 +12,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional, Tuple
 from argparse import ArgumentParser
-
+from .types import ControllerProtocol
+from .service.server import ServerCtx, start_server
 
 from cc2logger.parser import CC2GameFollower, CC2GameParser, generate_lua_stats_page
 from cc2logger.messages import PlayerChat
-from cc2admin.servercfgfile import ServerConfigXml, CfgPermissionPeer
+from cc2admin.servercfgfile import ServerConfigXml
 
 CFG = Path.cwd() / "cc2-config.toml"
 
@@ -51,8 +52,9 @@ def main():
     if opts.config:
         controller.apply_config(opts.config)
 
+    controller.run()
+
     while not controller.quit:
-        controller.run()
         time.sleep(2)
 
 
@@ -84,7 +86,7 @@ def gather_player_stats(game_dir: Path):
             (rev_mod / "library_custom_9.lua").write_bytes(server_stats_lua.encode("utf-8"))
 
 
-class ServerController:
+class ServerController(ControllerProtocol):
     def __init__(self, game_folder: Path):
         self.game_folder: Path = game_folder
         self.server_process: Optional[subprocess.Popen] = None
@@ -96,6 +98,41 @@ class ServerController:
         self.chat_thread: Optional[ChatThread] = None
         self.quit = False
         self.linux_pid = -1
+        self.listen_port = int(os.environ.get("CC2_CONTROLLER_PORT", 43432))
+        self.server_ctx = None
+
+    @property
+    def server_name(self) -> str:
+        return self.server_cfg.server_name
+
+    @property
+    def server_port(self) -> int:
+        return self.server_cfg.port
+
+    @property
+    def save_name(self) -> str:
+        return self.server_cfg.save_name
+
+    def get_mod_folders(self) -> list[str]:
+        return []
+
+    def get_teams(self) -> dict[int, str]:
+        teams = {}
+        for t, pl in self.follower.teams.items():
+            if t not in teams:
+                teams[t] = []
+            for p in pl.values():
+                teams[t].append(p.player_name)
+
+        return teams
+
+    def restart(self) -> None:
+        assert True
+
+    def status(self) -> str:
+        if self.server_process and self.server_process.poll() is None:
+            return "Running"
+        return "Stopped"
 
     def get_admin_yml(self) -> dict:
         admin_yml = self.game_folder / "admin.yml"
@@ -104,7 +141,6 @@ class ServerController:
             with admin_yml.open("r") as yy:
                 d = yaml.safe_load(yy)
         return d
-
 
     def get_global_admins(self) -> list[int]:
         d = self.get_admin_yml()
@@ -219,7 +255,7 @@ class ServerController:
         self.chat_thread = ChatThread(self)
         self.chat_thread.start()
 
-    def run(self) -> None:
+    def run_game(self) -> None:
         try:
             while not self.quit:
                 self.start()
@@ -230,6 +266,9 @@ class ServerController:
         except KeyboardInterrupt:
             self.stop()
             sys.exit()
+
+    def run(self):
+        start_server(self)
 
 
 class ChatThread(Thread):

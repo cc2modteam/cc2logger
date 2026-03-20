@@ -3,7 +3,7 @@ Simple threaded TCP server for command messages and status queries
 """
 import json
 import typing
-import select
+
 from http import HTTPStatus
 from threading import Thread
 from ..types import ControllerProtocol
@@ -68,7 +68,8 @@ class ServerCtx:
             },
             "POST": {
                 "/start": self.post_start,
-                "/stop": self.post_stop
+                "/stop": self.post_stop,
+                "/restart": self.post_restart,
             }
         }
 
@@ -82,7 +83,14 @@ class ServerCtx:
         return {
             "server_name": self.controller.server_name,
             "status": self.controller.status(),
-            "players": self.controller.get_teams()
+            "players": self.controller.get_teams(),
+            "settings": {
+                "islands": self.controller.island_count,
+                "base_difficulty": self.controller.base_difficulty,
+                "loadout_type": self.controller.loadout_type,
+                "save_name": self.controller.save_name,
+                "mods_list": self.controller.get_mod_folders()
+            }
         }
 
     def post_start(self, req: dict) -> dict:
@@ -96,6 +104,10 @@ class ServerCtx:
         return {
             "status": "stopping"
         }
+
+    def post_restart(self, req: dict) -> dict:
+        self.post_stop(req)
+        return self.post_start(req)
 
 
 class ControlServer(ThreadingHTTPServer):

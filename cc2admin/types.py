@@ -1,6 +1,7 @@
 from typing import Protocol
 from abc import abstractmethod
 
+
 class ControllerProtocol(Protocol):
 
     @property
@@ -18,8 +19,32 @@ class ControllerProtocol(Protocol):
     def save_name(self) -> str:
         pass
 
+    @property
+    @abstractmethod
+    def island_count(self) -> int:
+        pass
+
+    @property
+    @abstractmethod
+    def base_difficulty(self) -> int:
+        pass
+
+    @property
+    @abstractmethod
+    def blueprints(self) -> int:
+        pass
+
+    @property
+    @abstractmethod
+    def loadout_type(self) -> int:
+        pass
+
     @abstractmethod
     def get_teams(self) -> dict[int, str]:
+        pass
+
+    @abstractmethod
+    def get_global_admins(self) -> list[int]:
         pass
 
     @abstractmethod

@@ -15,7 +15,7 @@ from argparse import ArgumentParser
 from .types import ControllerProtocol
 from .service.server import ServerCtx, start_server
 
-from cc2logger.parser import CC2GameFollower, CC2GameParser, generate_lua_stats_page
+from cc2logger.parser import CC2GameFollower, CC2GameParser, generate_lua_stats_page, Player
 from cc2logger.messages import PlayerChat
 from cc2admin.servercfgfile import ServerConfigXml
 
@@ -113,21 +113,43 @@ class ServerController(ControllerProtocol):
     def save_name(self) -> str:
         return self.server_cfg.save_name
 
+    @property
+    def island_count(self) -> int:
+        return self.server_cfg.island_count
+
+    @property
+    def base_difficulty(self) -> int:
+        return self.server_cfg.base_difficulty
+
+    @property
+    def blueprints(self) -> int:
+        return self.server_cfg.blueprints
+
+    @property
+    def loadout_type(self) -> int:
+        return self.server_cfg.loadout_type
+
     def get_mod_folders(self) -> list[str]:
-        return []
+        return [x.value for x in self.server_cfg.mods]
 
     def get_teams(self) -> dict[int, str]:
         teams = {}
+        admins = self.get_global_admins()
         for t, pl in self.follower.teams.items():
             if t not in teams:
                 teams[t] = []
             for p in pl.values():
-                teams[t].append(p.player_name)
-
+                p: Player
+                if not p.left:
+                    name = f"{p.player_name}"
+                    if p.player_id in admins:
+                        name += "*"
+                    teams[t].append(name)
         return teams
 
     def restart(self) -> None:
-        assert True
+        self.stop()
+        self.start()
 
     def status(self) -> str:
         if self.server_process and self.server_process.poll() is None:

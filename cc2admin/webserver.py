@@ -91,7 +91,7 @@ def actions(action: str):
 @app.route("/login")
 def login():
     l = SteamSignIn()
-    return l.RedirectUser(l.ConstructURL("http://localhost:5000/steam-login"))
+    return l.RedirectUser(l.ConstructURL("https://bredlab.cc2maps.com/steam-login"))
 
 
 @app.route("/logout")

@@ -24,6 +24,15 @@
         <td>{{ context.status.status }}
         </td>
     </tr>
+    <tr>
+        <th>Access:</th>
+        {% if context.status.settings.password %}
+            <td>Password</td>
+        {% else %}
+            <td>Public</td>
+        {% endif %}
+    </tr>
+
     {% if steam_id %}
         <tr>
             <th>Admin Actions:</th>

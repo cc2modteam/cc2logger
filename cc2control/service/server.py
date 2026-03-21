@@ -84,7 +84,7 @@ class ServerCtx:
     def get_status(self, path) -> dict:
 
         all_props = ServerConfigXml.properties().keys()
-        hide_props = {"password"}
+        hide_props = set()
 
         settings = {
             "mods_list": self.controller.get_mod_folders()

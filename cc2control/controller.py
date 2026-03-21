@@ -110,6 +110,10 @@ class ServerController(ControllerProtocol):
         return self.server_cfg.port
 
     @property
+    def password(self) -> str:
+        return self.server_cfg.password
+
+    @property
     def save_name(self) -> str:
         return self.server_cfg.save_name
 

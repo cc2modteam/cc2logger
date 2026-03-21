@@ -16,6 +16,11 @@ class ControllerProtocol(Protocol):
 
     @property
     @abstractmethod
+    def password(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
     def save_name(self) -> str:
         pass
 

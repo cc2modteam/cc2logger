@@ -26,6 +26,12 @@
             </tr>
         {% if context.status.settings %}
             <tr>
+                <th>Password:</th>
+                <td>
+                    <input name="password" type="text" value="{{ context.get_json().settings.password }}"/>
+                </td>
+            </tr>
+            <tr>
                 <th>Island Count:</th>
                 <td>
                     <input name="island_count" type="text" value="{{ context.status.settings.island_count }}"/>

@@ -21,7 +21,7 @@ body {
     text-transform: uppercase;
 }
 
-a:link {
+a:link, a:visited {
     text-decoration: none;
     color: black;
 }
@@ -35,7 +35,7 @@ a:hover {
 }
 
 button {
-    border-style: none;
+    border: 1px solid teal;
     color: black;
     background-color: teal;
     min-width: 5cm;
@@ -43,10 +43,18 @@ button {
     padding-top: 1mm;
     vertical-align: bottom;
     text-transform: uppercase;
+    border-radius: 2mm;
+    margin-bottom: 1mm;
 }
 
 button:hover {
     color: white;
+}
+button:disabled,
+button[disabled]{
+    color: dimgrey;
+    background-color: #090909;
+    border: 1px solid dimgrey;
 }
 
 h1 {

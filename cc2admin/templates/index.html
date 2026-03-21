@@ -2,11 +2,13 @@
 {% block title %}Home{% endblock %}
 {% block content %}
     <h1>Server Status</h1>
-    <p style="text-align: right">
+
+    <p>
+        <a href="/"><button>Home</button></a>
     {% if steam_id %}
-        Logged in as {{ username }} <button><a href="/logout">Logout</a></button>
+         <button><a href="/logout">Logout</a></button> Logged in as {{ username }}
     {% else %}
-        Unauthenticated <a href="/login"><button>Login</button></a>
+         <a href="/login"><button>Login</button></a>
     {% endif %}
     </p>
 
@@ -33,6 +35,7 @@
                     <button>Stop</button>
                 </form>
             {% endif %}
+            <a href="/settings"><button>Settings</button></a>
             </td>
         </tr>
     {% endif %}

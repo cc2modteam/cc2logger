@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    <h1>Server Settings</h1>
+    <p>
+        <a href="/"><button>Home</button></a>
+    {% if steam_id %}
+         <button><a href="/logout">Logout</a></button> Logged in as {{ username }}
+    {% else %}
+         <a href="/login"><button>Login</button></a>
+    {% endif %}
+    </p>
+    {% if steam_id %}
+        <form action="/configure" method="post" id="settings">
+        <table class="props">
+            <tr>
+                <th>Name:</th>
+                <td>
+                    <input name="server_name" type="text" value="{{ context.status.server_name }}"/>
+                </td>
+            </tr>
+            <tr>
+                <th>Status:</th>
+                <td>{{ context.status.status }}
+                </td>
+            </tr>
+        {% if context.status.settings %}
+            <tr>
+                <th>Island Count:</th>
+                <td>
+                    <input name="island_count" type="text" value="{{ context.status.settings.islands }}"/>
+                </td>
+            </tr>
+            <tr>
+                <th>Blueprints:</th>
+                <td>
+                    <select name="blueprints">
+                        <option selected value="{{context.status.settings.blueprints}}">
+                            {{ blueprints(context.status.settings.blueprints).name|upper }}
+                        </option>
+                        <option value="0">
+                            {{ blueprints(0).name|upper }}
+                        </option>
+                        <option value="1">
+                            {{ blueprints(1).name|upper }}
+                        </option>
+                        <option value="2">
+                            {{ blueprints(2).name|upper }}
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>Loadout:</th>
+                <td>
+                    <select name="loadout_type">
+                        <option selected value="{{ context.status.settings.loadout_type }}">
+                            {{ loadout(context.status.settings.loadout_type).name|upper }}
+                        </option>
+                            <option value="0">
+                            {{ loadout(0).name|upper }}
+                        </option>
+                        <option value="1">
+                            {{ loadout(1).name|upper }}
+                        </option>
+                        <option value="2">
+                            {{ loadout(2).name|upper }}
+                        </option>
+                    </select>
+
+                </td>
+            </tr>
+            <tr>
+                <th>Mods:</th>
+                <td>
+                    <ul>
+                        {% for mod in context.status.settings.mods_list %}
+                            <li>{{ mod }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        {% endif %}
+        </table>
+            <p>
+                <button type="submit" form="settings">
+                    Apply
+                </button>
+                <button type="reset" form="settings">
+                    Reset
+                </button>
+            </p>
+        </form>
+    {% endif %}
+{% endblock %}

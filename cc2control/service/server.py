@@ -48,8 +48,9 @@ class ControlRequestHandler(SimpleHTTPRequestHandler):
                     return
                 msg = self.rfile.read(req_size).decode("utf-8")
                 data = json.loads(msg)
+                result = func(data)
                 self.make_headers()
-                self.send_resp(func(data))
+                self.send_resp(result)
             except Exception as err:
                 self.log_error(f"{type(err)} {err}")
                 self.make_headers(HTTPStatus.INTERNAL_SERVER_ERROR)
@@ -125,7 +126,8 @@ class ServerCtx:
     def post_set_option(self, req: dict) -> dict:
         for name, value in req.items():
             if isinstance(value, int) or isinstance(value, str):
-                self.controller.set_sever_option(name, value)
+                self.controller.set_server_option(name, value)
+        self.controller.save_config()
         return {}
 
 

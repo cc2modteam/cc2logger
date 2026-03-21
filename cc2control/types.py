@@ -52,7 +52,10 @@ class ControllerProtocol(Protocol):
         pass
 
     @abstractmethod
-    def set_sever_option(self, name: str, value: int | str) -> None:
+    def set_server_option(self, name: str, value: int | str) -> None:
+        pass
+
+    def save_config(self) -> None:
         pass
 
     @abstractmethod

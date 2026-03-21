@@ -1,3 +1,4 @@
+import time
 from secrets import token_bytes
 from flask import Flask, render_template, request, redirect, url_for, session
 from pysteamsignin.steamsignin import SteamSignIn
@@ -20,6 +21,50 @@ def home():
                            username=context.lookup_admin(steam_id)
                            )
 
+
+@app.route("/settings")
+def settings():
+    steam_id = session.get("steam_id")
+    return render_template("settings.html",
+                           context=context,
+                           blueprints=Blueprints,
+                           loadout=Loadout,
+                           steam_id=steam_id,
+                           username=context.lookup_admin(steam_id)
+                           )
+
+@app.route("/configure", methods=["POST"])
+def configure():
+    steam_id = session.get("steam_id")
+    if not steam_id or context.lookup_admin(steam_id) == "":
+        return render_template("error.html",
+                               message="Not authenticated",
+                               code=HTTPStatus.UNAUTHORIZED), HTTPStatus.UNAUTHORIZED.value
+
+    context.stop_server()
+    data = request.form
+    allowed = {
+        "max_players",
+        "server_name",
+        "blueprints",
+        "loadout_type",
+        "team_count_ai",
+        "team_count_human",
+        "password",
+        "island_count",
+        "island_count_per_team",
+        "carrier_count_per_team",
+        "base_difficulty",
+    }
+    send = {}
+    for name in allowed:
+        value = data.get(name, None)
+        if value is not None:
+            send[name] = value
+    if send:
+        context.post_json(send, "/cfg")
+    time.sleep(5)
+    return redirect("/")
 
 admin_actions = {
     "start": context.start_server,
@@ -66,7 +111,6 @@ def steam_login():
                                code=HTTPStatus.UNAUTHORIZED), HTTPStatus.UNAUTHORIZED.value
 
     admin_username = context.lookup_admin(steam_id)
-
     if admin_username != "":
         session["steam_id"] = steam_id
     else:

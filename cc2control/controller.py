@@ -136,14 +136,20 @@ class ServerController(ControllerProtocol):
     def loadout_type(self) -> int:
         return self.server_cfg.loadout_type
 
-    def set_sever_option(self, name: str, value: int|str) -> None:
+    def set_server_option(self, name: str, value: int | str) -> None:
         prop = self.server_cfg.properties().get(name)
-        if prop and isinstance(value, prop):
+        if prop:
             self.stop()
-            print(f"setting {name}")
+            value = prop(value)
+            print(f"setting {name} = {value}")
             setattr(self.server_cfg, name, value)
             return
         raise ValueError()
+
+    def save_config(self) -> None:
+        xml = self.server_cfg.to_xml()
+        self.server_xml.write_bytes(xml)
+        self.current_server_config, self.server_cfg = read_server_config(self.server_xml)
 
     def get_mod_folders(self) -> list[str]:
         return [x.value for x in self.server_cfg.mods]
@@ -246,6 +252,7 @@ class ServerController(ControllerProtocol):
                     pass
             self.server_process.kill()
             self.wait_stopped()
+            self.server_process = None
             print("Stopped.")
 
     def start(self) -> None:

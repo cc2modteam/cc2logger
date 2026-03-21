@@ -25,7 +25,7 @@ class CC2:
         resp.raise_for_status()
         return resp.json()
 
-    @cached(cache=TTLCache(maxsize=32, ttl=5))
+    @cached(cache=TTLCache(maxsize=32, ttl=4))
     def lookup_admin(self, steam_id: int|str) -> str:
         if steam_id:
             try:
@@ -36,7 +36,7 @@ class CC2:
                 pass
         return ""
 
-    @cached(cache=TTLCache(maxsize=1, ttl=5))
+    @cached(cache=TTLCache(maxsize=1, ttl=4))
     def server_status(self) -> dict:
         return self.get_json()
 

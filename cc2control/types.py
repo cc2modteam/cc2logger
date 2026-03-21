@@ -44,7 +44,7 @@ class ControllerProtocol(Protocol):
         pass
 
     @abstractmethod
-    def get_global_admins(self) -> list[int]:
+    def get_global_admins(self) -> dict[int, str]:
         pass
 
     @abstractmethod

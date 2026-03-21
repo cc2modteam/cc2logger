@@ -2,6 +2,14 @@
 {% block title %}Home{% endblock %}
 {% block content %}
     <h1>Server Status</h1>
+    <p style="text-align: right">
+    {% if steam_id %}
+        Logged in as {{ username }} <button><a href="/logout">Logout</a></button>
+    {% else %}
+        Unauthenticated <a href="/login"><button>Login</button></a>
+    {% endif %}
+    </p>
+
     <table class="props">
     <tr>
         <th>Name:</th>
@@ -9,46 +17,65 @@
     </tr>
     <tr>
         <th>Status:</th>
-        <td>{{ context.status.status }}</td>
+        <td>{{ context.status.status }}
+        </td>
     </tr>
-    <tr>
-        <th>Island Count:</th>
-        <td>{{ context.status.settings.islands }}</td>
-    </tr>
-    <tr>
-        <th>Blueprints:</th>
-        <td>{{ blueprints(context.status.settings.blueprints).name }}</td>
-    </tr>
-    <tr>
-        <th>Loadout:</th>
-        <td>{{ loadout(context.status.settings.loadout_type).name }}</td>
-    </tr>
-    <tr>
-        <th>Mods:</th>
-        <td>
-            <ul>
-                {% for mod in context.status.settings.mods_list %}
-                    <li>{{ mod }}</li>
+    {% if steam_id %}
+        <tr>
+            <th>Admin Actions:</th>
+            <td>
+            {% if context.status.status == "Stopped" %}
+                <form action="/action/start" method="post">
+                    <button>Start</button>
+                </form>
+            {% elif context.status.status == "Running" %}
+                <form action="/action/stop" method="post">
+                    <button>Stop</button>
+                </form>
+            {% endif %}
+            </td>
+        </tr>
+    {% endif %}
+    {% if context.status.settings %}
+        <tr>
+            <th>Island Count:</th>
+            <td>{{ context.status.settings.islands }}</td>
+        </tr>
+        <tr>
+            <th>Blueprints:</th>
+            <td>{{ blueprints(context.status.settings.blueprints).name }}</td>
+        </tr>
+        <tr>
+            <th>Loadout:</th>
+            <td>{{ loadout(context.status.settings.loadout_type).name }}</td>
+        </tr>
+        <tr>
+            <th>Mods:</th>
+            <td>
+                <ul>
+                    {% for mod in context.status.settings.mods_list %}
+                        <li>{{ mod }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Players:</th>
+            <td>
+                <ul>
+                {% for team, players in context.status.players |dictsort %}
+                    <li>
+                        Team {{ team }}
+                        <ul>
+                            {% for player in players %}
+                                <li>{{ player }}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
                 {% endfor %}
-            </ul>
-        </td>
-    </tr>
-    <tr>
-        <th>Players:</th>
-        <td>
-            <ul>
-            {% for team, players in context.status.players |dictsort %}
-                <li>
-                    Team {{ team }}
-                    <ul>
-                        {% for player in players %}
-                            <li>{{ player }}</li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% endfor %}
-            </ul>
-        </td>
-    </tr>
+                </ul>
+            </td>
+        </tr>
+    {% endif %}
     </table>
 {% endblock %}

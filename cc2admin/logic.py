@@ -20,6 +20,22 @@ class CC2:
         resp.raise_for_status()
         return resp.json()
 
+    def post_json(self, data: dict, path: str = ""):
+        resp = requests.post(self.control_path(path), json=data)
+        resp.raise_for_status()
+        return resp.json()
+
+    @cached(cache=TTLCache(maxsize=32, ttl=5))
+    def lookup_admin(self, steam_id: int|str) -> str:
+        if steam_id:
+            try:
+                steam_id = int(steam_id)
+                admin_username = self.post_json({"steam_id": steam_id}, "is_admin")
+                return admin_username
+            except ValueError:
+                pass
+        return ""
+
     @cached(cache=TTLCache(maxsize=1, ttl=5))
     def server_status(self) -> dict:
         return self.get_json()
@@ -41,6 +57,12 @@ class CC2:
 
     def server_name(self) -> str:
         return self.status.get("server_name")
+
+    def start_server(self):
+        self.post_json({}, "start")
+
+    def stop_server(self):
+        self.post_json({}, "stop")
 
 
 context = CC2()

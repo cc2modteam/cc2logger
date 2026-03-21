@@ -21,16 +21,28 @@ body {
     text-transform: uppercase;
 }
 
+a:link {
+    text-decoration: none;
+    color: black;
+}
+a:hover {
+    color: white;
+}
+
 * {
     font-family: fixed;
     font-size: 24px;
 }
 
 button {
+    border-style: none;
     color: black;
     background-color: teal;
     min-width: 5cm;
-    padding: 0.1cm;
+    padding: 0;
+    padding-top: 1mm;
+    vertical-align: bottom;
+    text-transform: uppercase;
 }
 
 button:hover {

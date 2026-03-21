@@ -150,7 +150,7 @@ class ServerController(ControllerProtocol):
 
     def get_teams(self) -> dict[int, str]:
         teams = {}
-        admins = self.get_global_admins()
+        admins = self.get_global_admins().keys()
         if self.follower:
             for t, pl in self.follower.teams.items():
                 if t not in teams:
@@ -181,9 +181,9 @@ class ServerController(ControllerProtocol):
                 d = yaml.safe_load(yy)
         return d
 
-    def get_global_admins(self) -> list[int]:
+    def get_global_admins(self) -> dict[int, str]:
         d = self.get_admin_yml()
-        return d.get("admin-users", {}).keys()
+        return d.get("admin-users", {})
 
     def get_runner_cfg(self) -> str:
         d = self.get_admin_yml()

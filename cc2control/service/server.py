@@ -34,7 +34,7 @@ class ControlRequestHandler(SimpleHTTPRequestHandler):
             self.make_headers(HTTPStatus.NOT_FOUND)
         else:
             self.make_headers()
-            self.send_resp(func())
+            self.send_resp(func(self.path))
 
     def do_POST(self):
         func: typing.Callable[[dict], dict]|None = self.ctx.endpoints["POST"].get(self.path, None)
@@ -62,13 +62,14 @@ class ServerCtx:
         self.server = server
         self.endpoints = {
             "GET": {
-                "/": self.get_status
+                "/": self.get_status,
             },
             "POST": {
                 "/start": self.post_start,
                 "/stop": self.post_stop,
                 "/restart": self.post_restart,
                 "/cfg": self.post_set_option,
+                "/is_admin": self.post_lookup_admin,
             }
         }
 
@@ -78,7 +79,7 @@ class ServerCtx:
         self.mainthread = t
         t.start()
 
-    def get_status(self) -> dict:
+    def get_status(self, path) -> dict:
         return {
             "server_name": self.controller.server_name,
             "status": self.controller.status(),
@@ -92,6 +93,18 @@ class ServerCtx:
                 "mods_list": self.controller.get_mod_folders()
             }
         }
+
+    def post_lookup_admin(self, req: dict) -> str:
+        steam_id = req.get("steam_id", 0)
+        if steam_id:
+            try:
+                steam_id = int(steam_id)
+                admins = self.controller.get_global_admins()
+                if steam_id in admins:
+                    return admins.get(steam_id)
+            except ValueError:
+                pass
+        return ""
 
     def post_start(self, req: dict) -> dict:
         self.controller.start()

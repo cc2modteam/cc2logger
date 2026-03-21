@@ -28,7 +28,7 @@
             <tr>
                 <th>Island Count:</th>
                 <td>
-                    <input name="island_count" type="text" value="{{ context.status.settings.islands }}"/>
+                    <input name="island_count" type="text" value="{{ context.status.settings.island_count }}"/>
                 </td>
             </tr>
             <tr>
@@ -70,6 +70,41 @@
 
                 </td>
             </tr>
+            <tr>
+                <th>Starting Islands:</th>
+                <td>
+                    <input name="island_count_per_team" type="text" value="{{ context.status.settings.island_count_per_team }}"/>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Human Teams:</th>
+                <td>
+                    <input name="team_count_human" type="text" value="{{ context.status.settings.team_count_human }}"/>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Carriers Per Team:</th>
+                <td>
+                    <input name="carrier_count_per_team" type="text" value="{{ context.status.settings.carrier_count_per_team }}"/>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Base Difficulty:</th>
+                <td>
+                    <input name="base_difficulty" type="text" value="{{ context.status.settings.base_difficulty }}"/>
+                </td>
+            </tr>
+
+            <tr>
+                <th>AI Carriers:</th>
+                <td>
+                    <input name="team_count_ai" type="text" value="{{ context.status.settings.team_count_ai }}"/>
+                </td>
+            </tr>
+
             <tr>
                 <th>Mods:</th>
                 <td>

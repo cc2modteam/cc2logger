@@ -39,6 +39,32 @@ class ControllerProtocol(Protocol):
     def loadout_type(self) -> int:
         pass
 
+    @property
+    @abstractmethod
+    def island_count_per_team(self) -> int:
+        pass
+
+    @property
+    @abstractmethod
+    def carrier_count_per_team(self) -> int:
+        pass
+
+    @property
+    @abstractmethod
+    def team_count_ai(self) -> int:
+        pass
+
+    @property
+    @abstractmethod
+    def team_count_human(self) -> int:
+        pass
+
+    @property
+    @abstractmethod
+    def max_players(self) -> int:
+        pass
+
+
     @abstractmethod
     def get_teams(self) -> dict[int, str]:
         pass

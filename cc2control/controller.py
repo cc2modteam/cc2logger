@@ -33,17 +33,10 @@ parser.add_argument("--config", type=str, help="Switch config file")
 parser.add_argument("--debug", default=False, action="store_true")
 
 
-def read_server_config(server_config: Path) -> Tuple[dict, ServerConfigXml]:
-    settings = {}
-
+def read_server_config(server_config: Path) -> ServerConfigXml:
     cfg = ServerConfigXml()
     cfg.from_xml(server_config.read_bytes())
-
-    settings["admin_users"] = set(cfg.get_admins())
-    settings["mods"] = set(cfg.get_mods())
-    settings["server_name"] = cfg.server_name
-
-    return settings, cfg
+    return cfg
 
 def main():
     opts = parser.parse_args()
@@ -101,7 +94,7 @@ class ServerController(ControllerProtocol):
         self.server_xml: Path = self.game_folder / "server_config.xml"
         self.server_configs: Path = game_folder / "configs"
         self.follower: Optional[CC2GameFollower] = None
-        self.current_server_config, self.server_cfg = read_server_config(self.server_xml)
+        self.server_cfg = read_server_config(self.server_xml)
         self.chat_thread: Optional[ChatThread] = None
         self.quit = False
         self.linux_pid = -1
@@ -136,6 +129,26 @@ class ServerController(ControllerProtocol):
     def loadout_type(self) -> int:
         return self.server_cfg.loadout_type
 
+    @property
+    def island_count_per_team(self) -> int:
+        return self.server_cfg.island_count_per_team
+
+    @property
+    def carrier_count_per_team(self) -> int:
+        return self.server_cfg.carrier_count_per_team
+
+    @property
+    def team_count_ai(self) -> int:
+        return self.server_cfg.team_count_ai
+
+    @property
+    def team_count_human(self) -> int:
+        return self.server_cfg.team_count_human
+
+    @property
+    def max_players(self) -> int:
+        return self.server_cfg.max_players
+
     def set_server_option(self, name: str, value: int | str) -> None:
         prop = self.server_cfg.properties().get(name)
         if prop:
@@ -149,7 +162,7 @@ class ServerController(ControllerProtocol):
     def save_config(self) -> None:
         xml = self.server_cfg.to_xml()
         self.server_xml.write_bytes(xml)
-        self.current_server_config, self.server_cfg = read_server_config(self.server_xml)
+        self.server_cfg = read_server_config(self.server_xml)
 
     def get_mod_folders(self) -> list[str]:
         return [x.value for x in self.server_cfg.mods]
@@ -230,11 +243,11 @@ class ServerController(ControllerProtocol):
     def apply_config(self, name: str) -> None:
         new_cfg = self.server_configs / f"{name}.xml"
         self.server_xml.write_bytes(new_cfg.read_bytes())
-        self.current_server_config, self.server_cfg = read_server_config(self.server_xml)
+        self.server_cfg = read_server_config(self.server_xml)
 
     @property
     def admin_users(self) -> set:
-        return get_admin_users(self.current_server_config)
+        return set(self.get_global_admins().keys())
 
     def stop(self) -> None:
         if self.chat_thread:
@@ -268,13 +281,13 @@ class ServerController(ControllerProtocol):
             cmdline = ["dedicated_server.exe"]
 
         # configure admins
-        self.current_server_config, self.server_cfg = read_server_config(self.server_xml)
+        self.server_cfg = read_server_config(self.server_xml)
         for admin in self.get_global_admins():
             if admin not in self.server_cfg.get_peers():
                 p = self.server_cfg.add_peer(admin)
                 p.is_admin = True
         self.server_xml.write_bytes(self.server_cfg.to_xml())
-        self.current_server_config, self.server_cfg = read_server_config(self.server_xml)
+        self.server_cfg = read_server_config(self.server_xml)
         self.server_process = subprocess.Popen(cmdline,
                                                cwd=str(self.game_folder),
                                                shell=shell,
@@ -287,12 +300,12 @@ class ServerController(ControllerProtocol):
         else:
             print(f"PID = {self.server_process.pid}")
 
-        self.current_server_config, self.server_cfg = read_server_config(self.server_xml)
+        self.server_cfg = read_server_config(self.server_xml)
 
-        print(f"Server: {self.current_server_config['server_name']}")
-        for mod in self.current_server_config.get("mods"):
+        print(f"Server: {self.server_cfg.server_name}")
+        for mod in self.server_cfg.get_mods():
             print(f"Mod Folder: {mod}")
-        for admin in self.current_server_config.get("admin_users"):
+        for admin in self.server_cfg.get_admins():
             print(f"Admin: {admin}")
 
         self.follower = CC2GameFollower()

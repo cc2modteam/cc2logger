@@ -32,6 +32,8 @@ class CC2:
                 steam_id = int(steam_id)
                 admin_username = self.post_json({"steam_id": steam_id}, "is_admin")
                 return admin_username
+            except ConnectionError:
+                pass
             except ValueError:
                 pass
         return ""
@@ -47,12 +49,14 @@ class CC2:
         except requests.HTTPError as err:
             return {
                 "server_name": "Server Error",
-                "status": f"Error {type(err)}"
+                "status": f"Error {type(err)}",
+                "settings": {},
             }
         except requests.ConnectionError:
             return {
                 "server_name": "Offline",
-                "status": "backend not running"
+                "status": "backend not running",
+                "settings": {},
             }
 
     def server_name(self) -> str:

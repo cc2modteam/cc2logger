@@ -7,6 +7,7 @@ import typing
 from http import HTTPStatus
 from threading import Thread
 from ..types import ControllerProtocol
+from cc2control.servercfgfile import ServerConfigXml
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 
 
@@ -81,18 +82,24 @@ class ServerCtx:
         t.start()
 
     def get_status(self, path) -> dict:
+
+        all_props = ServerConfigXml.properties().keys()
+        hide_props = {"password"}
+
+        settings = {
+            "mods_list": self.controller.get_mod_folders()
+        }
+        for name in all_props:
+            if name in hide_props:
+                continue
+            if hasattr(self.controller, name):
+                settings[name] = getattr(self.controller, name)
+
         return {
             "server_name": self.controller.server_name,
             "status": self.controller.status(),
             "players": self.controller.get_teams(),
-            "settings": {
-                "islands": self.controller.island_count,
-                "base_difficulty": self.controller.base_difficulty,
-                "blueprints": self.controller.blueprints,
-                "loadout_type": self.controller.loadout_type,
-                "save_name": self.controller.save_name,
-                "mods_list": self.controller.get_mod_folders()
-            }
+            "settings": settings,
         }
 
     def post_lookup_admin(self, req: dict) -> str:

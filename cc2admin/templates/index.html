@@ -8,7 +8,9 @@
     {% if steam_id %}
          <button><a href="/logout">Logout</a></button> Logged in as {{ username }}
     {% else %}
-         <a href="/login"><button>Login</button></a>
+        {% if context.status.settings %}
+            <a href="/login"><button>Login</button></a>
+        {% endif %}
     {% endif %}
     </p>
 
@@ -40,18 +42,44 @@
         </tr>
     {% endif %}
     {% if context.status.settings %}
-        <tr>
-            <th>Island Count:</th>
-            <td>{{ context.status.settings.islands }}</td>
-        </tr>
-        <tr>
-            <th>Blueprints:</th>
-            <td>{{ blueprints(context.status.settings.blueprints).name }}</td>
-        </tr>
-        <tr>
-            <th>Loadout:</th>
-            <td>{{ loadout(context.status.settings.loadout_type).name }}</td>
-        </tr>
+        {% if context.status.settings.save_name == "" %}
+            <tr>
+                <th>Island Count:</th>
+                <td>{{ context.status.settings.island_count }}</td>
+            </tr>
+            <tr>
+                <th>Blueprints:</th>
+                <td>{{ blueprints(context.status.settings.blueprints).name }}</td>
+            </tr>
+            <tr>
+                <th>Loadout:</th>
+                <td>{{ loadout(context.status.settings.loadout_type).name }}</td>
+            </tr>
+            <tr>
+                <th>Starting Islands:</th>
+                <td>{{ context.status.settings.island_count }}</td>
+            </tr>
+            <tr>
+                <th>Max Players:</th>
+                <td>{{ context.status.settings.max_players }}</td>
+            </tr>
+            <tr>
+                <th>Human Teams:</th>
+                <td>{{ context.status.settings.team_count_human }}</td>
+            </tr>
+            <tr>
+                <th>Starting Islands per team:</th>
+                <td>{{ context.status.settings.island_count_per_team }}</td>
+            </tr>
+            <tr>
+                <th>Carriers per team:</th>
+                <td>{{ context.status.settings.carrier_count_per_team }}</td>
+            </tr>
+            <tr>
+                <th>AI carriers:</th>
+                <td>{{ context.status.settings.team_count_ai }}</td>
+            </tr>
+        {% endif %}
         <tr>
             <th>Mods:</th>
             <td>
@@ -78,6 +106,11 @@
                 {% endfor %}
                 </ul>
             </td>
+        </tr>
+    {% else %}
+        <tr>
+            <th>Saved Map:</th>
+            <td>{{ context.status.settings.save_name }}</td>
         </tr>
     {% endif %}
     </table>

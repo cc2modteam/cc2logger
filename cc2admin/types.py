@@ -52,6 +52,10 @@ class ControllerProtocol(Protocol):
         pass
 
     @abstractmethod
+    def set_sever_option(self, name: str, value: int | str) -> None:
+        pass
+
+    @abstractmethod
     def stop(self) -> None:
         """Stop the game server"""
 

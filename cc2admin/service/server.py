@@ -55,8 +55,6 @@ class ControlRequestHandler(SimpleHTTPRequestHandler):
                 self.make_headers(HTTPStatus.INTERNAL_SERVER_ERROR)
 
 
-
-
 class ServerCtx:
     def __init__(self, controller: ControllerProtocol, server: "ControlServer"):
         self.controller = controller
@@ -70,6 +68,7 @@ class ServerCtx:
                 "/start": self.post_start,
                 "/stop": self.post_stop,
                 "/restart": self.post_restart,
+                "/cfg": self.post_set_option,
             }
         }
 
@@ -87,6 +86,7 @@ class ServerCtx:
             "settings": {
                 "islands": self.controller.island_count,
                 "base_difficulty": self.controller.base_difficulty,
+                "blueprints": self.controller.blueprints,
                 "loadout_type": self.controller.loadout_type,
                 "save_name": self.controller.save_name,
                 "mods_list": self.controller.get_mod_folders()
@@ -109,6 +109,12 @@ class ServerCtx:
         self.post_stop(req)
         return self.post_start(req)
 
+    def post_set_option(self, req: dict) -> dict:
+        for name, value in req.items():
+            if isinstance(value, int) or isinstance(value, str):
+                self.controller.set_sever_option(name, value)
+        return {}
+
 
 class ControlServer(ThreadingHTTPServer):
     def __init__(self, addr, handler):
@@ -116,8 +122,8 @@ class ControlServer(ThreadingHTTPServer):
         self.context: ServerCtx|None = None
 
 
-
 def start_server(controller: ControllerProtocol, port=11131, addr="127.0.0.1") -> ServerCtx:
+    print(f"Start control service. port={port}")
     ctx = ServerCtx(controller, ControlServer((addr, port), ControlRequestHandler))
     ctx.start()
     return ctx

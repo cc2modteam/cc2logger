@@ -12,7 +12,7 @@ class DataDict:
     def __init__(self):
         self.data = {}
         self.set_defaults()
-        
+
     def set_defaults(self):
         for name in dir(self):
             getattr(self, name)
@@ -44,6 +44,8 @@ class validate:
         self.public_name = name
 
     def __get__(self, instance, value):
+        if instance is None:
+            return self
         real = instance.data.get(self.public_name, self.default_value)
         if self.public_name not in instance.data:
             instance.data[self.public_name] = real
@@ -154,6 +156,19 @@ class ServerConfigXml(DataDict):
         for name in dir(self):
             getattr(self, name)
 
+    @classmethod
+    def properties(cls) -> dict[str, type]:
+        props = {}
+        for item in dir(cls):
+            if item.startswith("_"):
+                continue
+            p = getattr(cls, item)
+            if isinstance(p, validate):
+                if isinstance(p, validate_int):
+                    props[item] = int
+                elif isinstance(p, validate_str):
+                    props[item] = str
+        return props
 
     def get_mods(self) -> list[str]:
         return [x.value for x in self.mods]
@@ -174,7 +189,7 @@ class ServerConfigXml(DataDict):
 
     def get_peers(self) -> set[int]:
         return set([int(x.steam_id) for x in self.permissions])
-    
+
     def get_admins(self) -> set[int]:
         return set([x.steam_id for x in self.permissions if x.is_admin])
 

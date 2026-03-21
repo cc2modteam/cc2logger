@@ -53,6 +53,7 @@ def main():
         controller.apply_config(opts.config)
 
     controller.run()
+    print(f"Listening for control on port {controller.listen_port}")
 
     while not controller.quit:
         time.sleep(2)
@@ -73,14 +74,14 @@ def debug(msg):
 
 def gather_player_stats(game_dir: Path):
     print("generating server stats ..")
-    parser = CC2GameParser()
+    cp = CC2GameParser()
     logs_dir = game_dir / "logs"
-    parser.read_path(logs_dir)
+    cp.read_path(logs_dir)
 
     rev_mod = game_dir / "mods" / "rev" / "content" / "scripts"
 
     if rev_mod.exists():
-        server_stats_lua = generate_lua_stats_page(parser)
+        server_stats_lua = generate_lua_stats_page(cp)
         if server_stats_lua:
             debug(f"stats ({len(server_stats_lua)} bytes)")
             (rev_mod / "library_custom_9.lua").write_bytes(server_stats_lua.encode("utf-8"))
@@ -129,22 +130,32 @@ class ServerController(ControllerProtocol):
     def loadout_type(self) -> int:
         return self.server_cfg.loadout_type
 
+    def set_sever_option(self, name: str, value: int|str) -> None:
+        prop = self.server_cfg.properties().get(name)
+        if prop and isinstance(value, prop):
+            self.stop()
+            print(f"setting {name}")
+            setattr(self.server_cfg, name, value)
+            return
+        raise ValueError()
+
     def get_mod_folders(self) -> list[str]:
         return [x.value for x in self.server_cfg.mods]
 
     def get_teams(self) -> dict[int, str]:
         teams = {}
         admins = self.get_global_admins()
-        for t, pl in self.follower.teams.items():
-            if t not in teams:
-                teams[t] = []
-            for p in pl.values():
-                p: Player
-                if not p.left:
-                    name = f"{p.player_name}"
-                    if p.player_id in admins:
-                        name += "*"
-                    teams[t].append(name)
+        if self.follower:
+            for t, pl in self.follower.teams.items():
+                if t not in teams:
+                    teams[t] = []
+                for p in pl.values():
+                    p: Player
+                    if not p.left:
+                        name = f"{p.player_name}"
+                        if p.player_id in admins:
+                            name += "*"
+                        teams[t].append(name)
         return teams
 
     def restart(self) -> None:
@@ -290,7 +301,7 @@ class ServerController(ControllerProtocol):
             sys.exit()
 
     def run(self):
-        start_server(self)
+        start_server(self, port=self.listen_port)
 
 
 class ChatThread(Thread):

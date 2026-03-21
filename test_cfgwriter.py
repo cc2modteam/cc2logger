@@ -1,4 +1,4 @@
-from cc2admin.servercfgfile import ServerConfigXml, CfgPermissionPeer, CfgModValue
+from cc2control.servercfgfile import ServerConfigXml, CfgPermissionPeer, CfgModValue
 
 
 def test_generate_cfg():

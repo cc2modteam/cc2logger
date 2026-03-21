@@ -1,0 +1,74 @@
+@font-face {
+    font-family: 'fixed';
+    src: url("lanapixel.woff") format("woff"),
+         url("lanapixel.ttf") format("ttf");
+}
+
+body {
+    background-color: #1e1d1e;
+    margin: 0;
+}
+
+#content {
+    background-color: #090909;
+    color: lightslategray;
+    border-style: inset;
+    border-width: 2mm;
+    margin: 2vh;
+    height: 85vh;
+    padding: 3mm;
+
+    text-transform: uppercase;
+}
+
+* {
+    font-family: fixed;
+    font-size: 24px;
+}
+
+button {
+    color: black;
+    background-color: teal;
+    min-width: 5cm;
+    padding: 0.1cm;
+}
+
+button:hover {
+    color: white;
+}
+
+h1 {
+    font-size: 48px;
+}
+
+h1, h2, h3 {
+    margin-top: 0;
+    margin-bottom: 0.1em;
+    color: cyan;
+}
+
+ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: square;
+}
+
+.props {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.props tr {
+    border-bottom: 1px solid #1e1d1e;
+}
+
+.props th {
+    width: 3in;
+    text-align: left;
+    color: dimgrey;
+    vertical-align: text-top;
+}
+
+.props td {
+    vertical-align: text-top;
+}

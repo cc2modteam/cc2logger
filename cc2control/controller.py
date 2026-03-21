@@ -1,5 +1,8 @@
 """
 CC2 Dedicated Server Control Harness
+
+This usually runs under wine or on windows and listens on a local TCP socket.
+
 """
 import os
 import platform
@@ -13,11 +16,11 @@ from pathlib import Path
 from typing import Optional, Tuple
 from argparse import ArgumentParser
 from .types import ControllerProtocol
-from .service.server import ServerCtx, start_server
+from .service.server import start_server
 
 from cc2logger.parser import CC2GameFollower, CC2GameParser, generate_lua_stats_page, Player
 from cc2logger.messages import PlayerChat
-from cc2admin.servercfgfile import ServerConfigXml
+from .servercfgfile import ServerConfigXml
 
 CFG = Path.cwd() / "cc2-config.toml"
 
@@ -88,6 +91,9 @@ def gather_player_stats(game_dir: Path):
 
 
 class ServerController(ControllerProtocol):
+
+    DEFAULT_PORT = 43432
+
     def __init__(self, game_folder: Path):
         self.game_folder: Path = game_folder
         self.server_process: Optional[subprocess.Popen] = None
@@ -99,7 +105,7 @@ class ServerController(ControllerProtocol):
         self.chat_thread: Optional[ChatThread] = None
         self.quit = False
         self.linux_pid = -1
-        self.listen_port = int(os.environ.get("CC2_CONTROLLER_PORT", 43432))
+        self.listen_port = int(os.environ.get("CC2_CONTROLLER_PORT", self.DEFAULT_PORT))
         self.server_ctx = None
 
     @property

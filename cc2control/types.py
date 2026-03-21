@@ -1,6 +1,6 @@
 from typing import Protocol
 from abc import abstractmethod
-
+from enum import Enum
 
 class ControllerProtocol(Protocol):
 
@@ -70,3 +70,14 @@ class ControllerProtocol(Protocol):
     @abstractmethod
     def status(self) -> str:
         """Get the server status"""
+
+
+class Blueprints(Enum):
+    default = 0
+    none = 1
+    all = 2
+
+class Loadout(Enum):
+    default = 0
+    minimal = 1
+    complete = 2

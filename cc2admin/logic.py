@@ -5,6 +5,7 @@ from cachetools import cached, TTLCache
 from cc2control.controller import ServerController
 
 listen_port = int(os.environ.get("CC2_CONTROLLER_PORT", ServerController.DEFAULT_PORT))
+public_hostname = str(os.environ.get("CC2_WEBSERVER_HOST", "http://localhost:5000"))
 
 
 class CC2:
@@ -13,7 +14,7 @@ class CC2:
         self.port = listen_port
 
     def control_path(self, path: str = "") -> str:
-        return f"http://127.0.0.1:{self.port}/{path}"
+        return f"http://localhost:{self.port}/{path}"
 
     def get_json(self, path: str = ""):
         resp = requests.get(self.control_path(path))

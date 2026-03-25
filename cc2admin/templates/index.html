@@ -1,19 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
+{% block heading %}Server Status{% endblock %}
+
 {% block content %}
-    <h1>Server Status</h1>
-
-    <p>
-        <a href="/"><button>Home</button></a>
-    {% if steam_id %}
-         <button><a href="/logout">Logout</a></button> Logged in as {{ username }}
-    {% else %}
-        {% if context.status.settings %}
-            <a href="/login"><button>Login</button></a>
-        {% endif %}
-    {% endif %}
-    </p>
-
     <table class="props">
     <tr>
         <th>Name:</th>
@@ -63,10 +52,6 @@
             <tr>
                 <th>Loadout:</th>
                 <td>{{ loadout(context.status.settings.loadout_type).name }}</td>
-            </tr>
-            <tr>
-                <th>Starting Islands:</th>
-                <td>{{ context.status.settings.island_count }}</td>
             </tr>
             <tr>
                 <th>Max Players:</th>

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Busy{% endblock %}
+{% block heading %}Applying Changes{% endblock %}
+{% block content %}
+
+    <div style="margin: 2cm">
+        Please wait..
+        <div id="busy_signal">
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function redirect_home() {
+            window.location.replace("/");
+        }
+
+        function append_busy() {
+            var busy = document.getElementById("busy_signal");
+            busy.innerHTML += "&#x2584; ";
+            setTimeout(append_busy, 500);
+        }
+        setTimeout(append_busy, 500);
+        setTimeout(redirect_home, 6500);
+    </script>
+
+
+{% endblock %}

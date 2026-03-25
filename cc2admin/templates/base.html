@@ -7,6 +7,17 @@
 </head>
 <body>
     <div id="content">
+        <h1>{% block heading %}{% endblock %}</h1>
+        <p>
+            <a href="/"><button>Home</button></a>
+        {% if steam_id %}
+             <button><a href="/logout">Logout</a></button> Logged in as {{ username }}
+        {% else %}
+            {% if context and context.status.settings %}
+                <a href="/login"><button>Login</button></a>
+            {% endif %}
+        {% endif %}
+        </p>
         {% block content %}
         {% endblock %}
     </div>

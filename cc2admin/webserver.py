@@ -1,9 +1,11 @@
+import threading
 import time
+import yaml
 from secrets import token_bytes
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, session
 from pysteamsignin.steamsignin import SteamSignIn
 from http import HTTPStatus
-from .logic import context
+from .logic import context, public_hostname
 from cc2control.types import Blueprints, Loadout
 
 
@@ -29,6 +31,15 @@ def settings():
                            context=context,
                            blueprints=Blueprints,
                            loadout=Loadout,
+                           steam_id=steam_id,
+                           username=context.lookup_admin(steam_id)
+                           )
+
+@app.route("/wait")
+def wait_page():
+    steam_id = session.get("steam_id")
+    return render_template("wait.html",
+                           context=context,
                            steam_id=steam_id,
                            username=context.lookup_admin(steam_id)
                            )
@@ -63,8 +74,7 @@ def configure():
             send[name] = value
     if send:
         context.post_json(send, "/cfg")
-    time.sleep(5)
-    return redirect("/")
+    return redirect("/wait")
 
 admin_actions = {
     "start": context.start_server,
@@ -80,8 +90,9 @@ def actions(action: str):
                                code=HTTPStatus.UNAUTHORIZED), HTTPStatus.UNAUTHORIZED.value
 
     if action in admin_actions:
-        admin_actions[action]()
-        return redirect("/")
+        bg = threading.Thread(target=admin_actions[action], daemon=True)
+        bg.start()
+        return redirect("/wait")
 
     return render_template("error.html",
                            message="Unknown action",
@@ -91,7 +102,7 @@ def actions(action: str):
 @app.route("/login")
 def login():
     l = SteamSignIn()
-    return l.RedirectUser(l.ConstructURL("https://bredlab.cc2maps.com/steam-login"))
+    return l.RedirectUser(l.ConstructURL(f"{public_hostname}/steam-login"))
 
 
 @app.route("/logout")

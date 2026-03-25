@@ -15,7 +15,7 @@ body {
     border-style: inset;
     border-width: 2mm;
     margin: 2vh;
-    height: 85vh;
+    min-height: 85vh;
     padding: 3mm;
 
     text-transform: uppercase;

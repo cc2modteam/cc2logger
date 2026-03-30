@@ -5,11 +5,15 @@ import time
 from datetime import datetime, timedelta
 from abc import abstractmethod, ABC
 from typing import Optional
+from collections.abc import Callable
 from pathlib import Path
 from textwrap import dedent
 from io import StringIO
 from .resolver import Vehicle
 from .messages import MessageBase, MessageFactory, PlayerJoined, PlayerLeft, CapturedIsland, DestroyedVehicle
+
+
+Callback = Callable[[MessageBase], bool]
 
 
 class JsonlParserBase(ABC):
@@ -200,6 +204,7 @@ class CC2GameFollower(CC2GameParser):
         self.checked_latest = 0
         self.check_latest_interval = 30
         self.files = []
+        self.callbacks: list[Callback] = []
 
     def get_files(self) -> list[Path]:
         files = sorted(list(self.folder.glob("game_log_*.jsonl")))
@@ -223,6 +228,16 @@ class CC2GameFollower(CC2GameParser):
         self.debug(f"got {resp}")
         return resp
 
+    def dispatch(self, message: MessageBase) -> None:
+        for func in self.callbacks:
+            try:
+                handled = func(message)
+                if handled:
+                    return
+            except Exception as err:
+                print(f"subscriber function raised {type(err)}")
+                self.debug(str(err))
+
     def read_one(self) -> Optional[MessageBase]:
         self.debug(f"read_one() {self._fd.tell()}")
         now = time.monotonic()
@@ -239,6 +254,8 @@ class CC2GameFollower(CC2GameParser):
         try:
             data = super().read_one()
             self.debug(f"got: {data}")
+            if data:
+                self.dispatch(data)
             return data
         except StopIteration:
             self.reset()

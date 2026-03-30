@@ -105,6 +105,11 @@ class ControllerProtocol(Protocol):
     def status(self) -> str:
         """Get the server status"""
 
+    @property
+    @abstractmethod
+    def game_stats(self) -> dict[str, int]:
+        """Get the game stats"""
+
 
 class Blueprints(Enum):
     default = 0

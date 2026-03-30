@@ -13,6 +13,9 @@ class MessageBase:
         self._data = data
         self.timestamp = datetime.fromisoformat(data.get("timestamp"))
 
+    def __str__(self):
+        return f"{type(self).__name__}"
+
 
 class TeamMessageBase(MessageBase, ABC):
     def __init__(self):
@@ -23,11 +26,17 @@ class TeamMessageBase(MessageBase, ABC):
         super().parse(data)
         self.team = int(data.get("team", data.get("team_id", self.team)))
 
+    def __str__(self):
+        return super().__str__() + f" team {self.team}"
+
 class PlayerMessageBase(TeamMessageBase, ABC):
     def __init__(self):
         super().__init__()
         self.player_name: str = ""
         self.player_id: int = 0
+
+    def __str__(self):
+        return super().__str__() + f" player {self.player_name}"
 
     def parse(self, data: dict):
         super().parse(data)
@@ -66,6 +75,9 @@ class DestroyedVehicle(TeamMessageBase):
     def vehicle_type_name(self) -> str:
         return Vehicle.lookup(self.vehicle_type).name
 
+    def __str__(self):
+        return super().__str__() + f" lost {self.vehicle_type_name}"
+
 
 class CapturedIsland(TeamMessageBase):
     def __init__(self):
@@ -76,6 +88,9 @@ class CapturedIsland(TeamMessageBase):
         super().parse(data)
         self.island_id = int(data.get("island_id", self.island_id))
         # yes, could lookup island name here
+
+    def __str__(self):
+        return super().__str__() + f" captured island {self.island_id}"
 
 
 class MessageFactory:

@@ -16,10 +16,11 @@ from pathlib import Path
 from typing import Optional, Tuple
 from argparse import ArgumentParser
 from .types import ControllerProtocol
+from .serverstats import Stats
 from .service.server import start_server
 
-from cc2logger.parser import CC2GameFollower, CC2GameParser, generate_lua_stats_page, Player
-from cc2logger.messages import PlayerChat
+from cc2logger.parser import CC2GameFollower, CC2GameParser, generate_lua_stats_page, Player, Callback
+from cc2logger.messages import PlayerChat, MessageBase, DestroyedVehicle
 from .servercfgfile import ServerConfigXml
 
 CFG = Path.cwd() / "cc2-config.toml"
@@ -95,11 +96,22 @@ class ServerController(ControllerProtocol):
         self.server_configs: Path = game_folder / "configs"
         self.follower: Optional[CC2GameFollower] = None
         self.server_cfg = read_server_config(self.server_xml)
-        self.chat_thread: Optional[ChatThread] = None
+        self.message_loop: Optional[ServerLoop] = None
         self.quit = False
         self.linux_pid = -1
         self.listen_port = int(os.environ.get("CC2_CONTROLLER_PORT", self.DEFAULT_PORT))
         self.server_ctx = None
+        self.stats = [Stats()]
+
+    @property
+    def game_stats(self) -> dict[str, int]:
+        current = self.stats[-1]
+        data = {
+            "units_destroyed": len(current.destroyed_vehicles),
+            "islands_captured": len(current.captured_islands),
+        }
+
+        return data
 
     @property
     def server_name(self) -> str:
@@ -254,8 +266,8 @@ class ServerController(ControllerProtocol):
         return set(self.get_global_admins().keys())
 
     def stop(self) -> None:
-        if self.chat_thread:
-            self.chat_thread.quit = True
+        if self.message_loop:
+            self.message_loop.quit = True
 
         if self.server_process:
             print("Stopping server..")
@@ -271,6 +283,15 @@ class ServerController(ControllerProtocol):
             self.wait_stopped()
             self.server_process = None
             print("Stopped.")
+
+        all_stats = list(self.stats)
+        one_day = 24 * 60 * 60
+        self.stats = [x for x in all_stats if x.age < one_day * 3]
+        self.stats.append(Stats())
+
+    def handle_stats_event(self, message: MessageBase) -> bool:
+        stats = self.stats[-1]
+        return stats.record_event(message)
 
     def start(self) -> None:
         self.stop()
@@ -313,19 +334,21 @@ class ServerController(ControllerProtocol):
             print(f"Admin: {admin}")
 
         self.follower = CC2GameFollower()
+        self.follower.callbacks.append(self.handle_stats_event)
         self.follower.debug_enabled = "DEBUG" in os.environ
         self.follower.open_latest(self.game_folder / "logs")
-        self.chat_thread = ChatThread(self)
-        self.chat_thread.start()
+        self.message_loop = ServerLoop(self)
+        self.follower.callbacks.append(self.message_loop.handle_chat_message)
+        self.message_loop.start()
 
     def run_game(self) -> None:
         try:
             while not self.quit:
                 self.start()
                 self.wait_stopped()
-            if self.chat_thread:
-                self.chat_thread.join()
-                self.chat_thread = None
+            if self.message_loop:
+                self.message_loop.join()
+                self.message_loop = None
         except KeyboardInterrupt:
             self.stop()
             sys.exit()
@@ -334,11 +357,45 @@ class ServerController(ControllerProtocol):
         start_server(self, port=self.listen_port)
 
 
-class ChatThread(Thread):
+class ServerLoop(Thread):
     def __init__(self, controller: ServerController):
         super().__init__(daemon=True)
         self.controller = controller
         self.quit = False
+
+    def handle_chat_message(self, msg: MessageBase) -> bool:
+        if isinstance(msg, PlayerChat):
+            prefix = " "
+            admin = str(msg.player_id) in self.controller.admin_users
+            if admin:
+                prefix = "@"
+            print(f"{datetime.now().isoformat()} <{prefix}{msg.player_name}> {msg.message}")
+
+            if admin and msg.message.startswith("/"):
+                self.handle_admin_chat_message(msg.message)
+
+            return True
+        return False
+
+    def handle_admin_chat_message(self, message: str) -> None:
+        command = message.lstrip("/")
+        words = command.split()
+
+        if words[0] == "restart":
+            self.stop()
+        if words[0] == "shutdown":
+            self.controller.quit = True
+            self.stop()
+        if words[0] == "config":
+            cfg_name = words[1]
+            if "/" in cfg_name:
+                return
+            if "\\" in cfg_name:
+                return
+            if ":" in cfg_name:
+                return
+            self.stop()
+            self.controller.apply_config(cfg_name)
 
     def run(self):
         last_stats = 0
@@ -350,42 +407,15 @@ class ChatThread(Thread):
             if elapsed > stats_interval:
                 last_stats = time.monotonic()
                 gather_player_stats(self.controller.game_folder)
-
             try:
                 msg = self.controller.follower.read_one()
                 if not msg:
                     time.sleep(2)
                     continue
                 debug(f"{type(msg)}, {str(msg)}")
-                if isinstance(msg, PlayerChat):
-                    prefix = " "
-                    admin = str(msg.player_id) in self.controller.admin_users
-                    if admin:
-                        prefix = "@"
-                    print(f"{datetime.now().isoformat()} <{prefix}{msg.player_name}> {msg.message}")
-                    if admin:
-                        message = msg.message
-                        if message.startswith("/"):
-                            command = message.lstrip("/")
-                            words = command.split()
 
-                            if words[0] == "restart":
-                                self.stop()
-                            if words[0] == "shutdown":
-                                self.controller.quit = True
-                                self.stop()
-                            if words[0] == "config":
-                                cfg_name = words[1]
-                                if "/" in cfg_name:
-                                    break
-                                if "\\" in cfg_name:
-                                    break
-                                if ":" in cfg_name:
-                                    break
-                                self.stop()
-                                self.controller.apply_config(cfg_name)
             except Exception as err:
-                print(f"chat thread got {err}, quitting")
+                print(f"server loop got {err}, quitting")
                 self.quit = True
 
     def stop(self):

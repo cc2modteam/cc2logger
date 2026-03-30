@@ -84,12 +84,14 @@ admin_actions = {
 @app.route("/action/<action>", methods=["POST"])
 def actions(action: str):
     steam_id = session.get("steam_id")
-    if not steam_id or context.lookup_admin(steam_id) == "":
+    admin_user = context.lookup_admin(steam_id)
+    if not steam_id or admin_user == "":
         return render_template("error.html",
                                message="Not authenticated",
                                code=HTTPStatus.UNAUTHORIZED), HTTPStatus.UNAUTHORIZED.value
 
     if action in admin_actions:
+        app.logger.info("action %s from user %s %s", action, admin_user, steam_id)
         bg = threading.Thread(target=admin_actions[action], daemon=True)
         bg.start()
         return redirect("/wait")

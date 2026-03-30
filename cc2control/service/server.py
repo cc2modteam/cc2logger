@@ -95,12 +95,15 @@ class ServerCtx:
             if hasattr(self.controller, name):
                 settings[name] = getattr(self.controller, name)
 
-        return {
+        status = {
             "server_name": self.controller.server_name,
             "status": self.controller.status(),
             "players": self.controller.get_teams(),
             "settings": settings,
+            "game_stats": dict(self.controller.game_stats)
         }
+
+        return status
 
     def post_lookup_admin(self, req: dict) -> str:
         steam_id = req.get("steam_id", 0)

@@ -90,6 +90,13 @@
             </td>
             <td style="vertical-align: top; padding-left: 1cm;">
                 <table class="props">
+                    {% for name, value in context.status.game_stats |dictsort %}
+                    <tr>
+                        <th>{{name}}</th>
+                        <td style="text-align: right">{{value}}</td>
+                    </tr>
+                    {% endfor %}
+
                     <tr>
                         <th>Mods:</th>
                         <td>
@@ -103,6 +110,7 @@
                     <tr>
                         <th>Players:</th>
                         <td>
+                            {% if context.status.players %}
                             <ul>
                                 {% for team, players in context.status.players |dictsort %}
                                     <li>
@@ -115,6 +123,7 @@
                                     </li>
                                 {% endfor %}
                             </ul>
+                            {% endif %}
                         </td>
                     </tr>
                 </table>

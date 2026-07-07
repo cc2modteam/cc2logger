@@ -84,19 +84,6 @@ class CC2:
         resp.raise_for_status()
         return resp.json()
 
-    @cached(cache=TTLCache(maxsize=32, ttl=4))
-    def lookup_admin(self, steam_id: int|str) -> str:
-        if steam_id:
-            try:
-                steam_id = int(steam_id)
-                admin_username = self.post_json({"steam_id": steam_id}, "is_admin")
-                return admin_username
-            except ConnectionError:
-                pass
-            except ValueError:
-                pass
-        return ""
-
     @cached(cache=TTLCache(maxsize=1, ttl=4))
     def server_status(self) -> dict:
         return self.get_json()
@@ -113,6 +100,7 @@ class CC2:
                 "settings": {},
             }
         except requests.ConnectionError as err:
+            print(str(err))
             return {
                 "server_name": "Offline",
                 "status": "backend not running",

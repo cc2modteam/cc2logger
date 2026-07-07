@@ -124,7 +124,7 @@ def actions(server: str, action: str):
     }
 
     steam_id = session.get("steam_id")
-    admin_user = context.lookup_admin(steam_id)
+    admin_user = webserver_cfg.lookup_admin(steam_id)
     if not steam_id or admin_user == "":
         return render_template("error.html",
                                message="Not authenticated",

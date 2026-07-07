@@ -1,0 +1,6 @@
+port: 40441
+addr: 0.0.0.0
+tls: true
+key: certs/server.key
+cert: certs/server.crt
+ca: certs/ca.crt

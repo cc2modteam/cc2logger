@@ -2,6 +2,7 @@
 Simple threaded TCP server for command messages and status queries
 """
 import json
+import ssl
 import typing
 
 from http import HTTPStatus
@@ -142,14 +143,30 @@ class ServerCtx:
 
 
 class ControlServer(ThreadingHTTPServer):
-    def __init__(self, addr, handler):
+    def __init__(self, addr, handler, controller: ControllerProtocol):
         super().__init__(addr, handler)
+        self.controller = controller
         self.context: ServerCtx|None = None
 
+        if controller.controller_cfg.tls:
+            self.ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+            self.ssl_context.verify_flags &= ~ssl.VERIFY_X509_STRICT
+            self.ssl_context.load_cert_chain(
+                certfile=controller.controller_cfg.cert,
+                keyfile=controller.controller_cfg.key
+            )
+            self.ssl_context.load_verify_locations(
+                controller.controller_cfg.ca
+            )
+            self.ssl_context.verify_mode = ssl.CERT_REQUIRED
+            self.socket = self.ssl_context.wrap_socket(self.socket, server_side=True)
 
-def start_server(controller: ControllerProtocol, port=11131, addr="127.0.0.1") -> ServerCtx:
-    print(f"Start control service. port={port}")
-    ctx = ServerCtx(controller, ControlServer((addr, port), ControlRequestHandler))
+
+def start_server(controller: ControllerProtocol) -> ServerCtx:
+    port = controller.controller_cfg.port
+    addr = controller.controller_cfg.addr
+    print(f"Start control service. port={addr}:{port}")
+    ctx = ServerCtx(controller, ControlServer((addr, port), ControlRequestHandler, controller))
     ctx.start()
     return ctx
 

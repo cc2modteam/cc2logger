@@ -3,7 +3,7 @@
 {% block heading %}Settings{% endblock %}
 {% block content %}
     {% if steam_id %}
-        <form action="/configure" method="post" id="settings">
+        <form action="/{{ server }}/configure" method="post" id="settings">
         <table class="props">
             <tr>
                 <th>Name:</th>

@@ -1,8 +1,26 @@
-from typing import Protocol
+import dataclasses
+from typing import Protocol, Optional
 from abc import abstractmethod
 from enum import Enum
+from pathlib import Path
+
+
+@dataclasses.dataclass
+class ControllerConfig:
+    port: int
+    addr: str
+    tls: bool
+    key: Optional[Path]
+    cert: Optional[Path]
+    ca: Optional[Path]
+
 
 class ControllerProtocol(Protocol):
+
+    @property
+    @abstractmethod
+    def controller_cfg(self) -> ControllerConfig:
+        pass
 
     @property
     @abstractmethod

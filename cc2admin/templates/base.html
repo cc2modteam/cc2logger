@@ -13,9 +13,7 @@
         {% if steam_id %}
              <button><a href="/logout">Logout</a></button> Logged in as {{ username }}
         {% else %}
-            {% if context and context.status.settings %}
-                <a href="/login"><button>Login</button></a>
-            {% endif %}
+             <a href="/login"><button>Login</button></a>
         {% endif %}
         </p>
         {% block content %}

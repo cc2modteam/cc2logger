@@ -13,20 +13,16 @@ import subprocess
 from threading import Thread
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional
 from argparse import ArgumentParser
-from .types import ControllerProtocol
+from .types import ControllerProtocol, ControllerConfig
 from .serverstats import Stats
 from .service.server import start_server
 
-from cc2logger.parser import CC2GameFollower, CC2GameParser, generate_lua_stats_page, Player, Callback
-from cc2logger.messages import PlayerChat, MessageBase, DestroyedVehicle
+from cc2logger.parser import CC2GameFollower, CC2GameParser, generate_lua_stats_page, Player
+from cc2logger.messages import PlayerChat, MessageBase
 from .servercfgfile import ServerConfigXml
 
-CFG = Path.cwd() / "cc2-config.toml"
-
-CONTAINER = "cc2-server"
-XML_CFG = "server_config.xml"
 
 parser = ArgumentParser(description=__doc__)
 parser.add_argument("--game-dir", type=Path, default=Path("Carrier Command 2"), help="Directory to the cc2 installation")
@@ -38,6 +34,7 @@ def read_server_config(server_config: Path) -> ServerConfigXml:
     cfg = ServerConfigXml()
     cfg.from_xml(server_config.read_bytes())
     return cfg
+
 
 def main():
     opts = parser.parse_args()
@@ -84,6 +81,37 @@ def gather_player_stats(game_dir: Path):
             (rev_mod / "library_custom_9.lua").write_bytes(server_stats_lua.encode("utf-8"))
 
 
+
+
+def load_controller_config(cfg_file: Optional[Path] = None) -> ControllerConfig:
+    if cfg_file is None:
+        cfg_file = Path.cwd() / "controller.yml"
+
+    with cfg_file.open("r") as fd:
+        data = yaml.safe_load(fd)
+
+    port: int = data.get("port", ServerController.DEFAULT_PORT)
+    addr: str = data.get("addr", "127.0.0.1")
+    key = data.get("key", None)
+    cert = data.get("cert", None)
+    ca = data.get("ca", None)
+
+    if key:
+        key = Path(key)
+    if cert:
+        cert = Path(cert)
+    if ca:
+        ca = Path(ca)
+
+    return ControllerConfig(
+        port=port,
+        tls=data.get("tls", True),
+        addr=addr,
+        key=key,
+        cert=cert,
+        ca=ca)
+
+
 class ServerController(ControllerProtocol):
 
     DEFAULT_PORT = 43432
@@ -93,15 +121,22 @@ class ServerController(ControllerProtocol):
         self.server_process: Optional[subprocess.Popen] = None
         self.server_output: Path = self.game_folder / "server.log"
         self.server_xml: Path = self.game_folder / "server_config.xml"
+        self.controller_yml: Path = self.game_folder / "controller.yml"
+        self._controller_cfg = load_controller_config(self.controller_yml)
         self.server_configs: Path = game_folder / "configs"
         self.follower: Optional[CC2GameFollower] = None
         self.server_cfg = read_server_config(self.server_xml)
         self.message_loop: Optional[ServerLoop] = None
         self.quit = False
         self.linux_pid = -1
-        self.listen_port = int(os.environ.get("CC2_CONTROLLER_PORT", self.DEFAULT_PORT))
+        self.listen_port = self.controller_cfg.port
+        self.listen_addr = self.controller_cfg.addr
         self.server_ctx = None
         self.stats = [Stats()]
+
+    @property
+    def controller_cfg(self) -> ControllerConfig:
+        return self._controller_cfg
 
     @property
     def game_stats(self) -> dict[str, int]:
@@ -354,7 +389,7 @@ class ServerController(ControllerProtocol):
             sys.exit()
 
     def run(self):
-        start_server(self, port=self.listen_port)
+        start_server(self)
 
 
 class ServerLoop(Thread):

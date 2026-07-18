@@ -178,6 +178,8 @@ def steam_login():
     if admin_username != "":
         session["steam_id"] = steam_id
     else:
-        del session["steam_id"]
+        return render_template("error.html",
+                               message="Admin access denied",
+                               code=HTTPStatus.UNAUTHORIZED), HTTPStatus.UNAUTHORIZED.value
 
     return redirect("/")

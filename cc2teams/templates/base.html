@@ -12,10 +12,11 @@
             <tr>
                 <td style="text-align: left;">
                     <a href="/"><button>Home</button></a>
+                    <a href="/events"><button>Events</button></a>
                 </td>
                 <td style="text-align: right; vertical-align: middle">
                 {% if steam_id %}
-                    <span>Logged in as {{ username }}</span>
+                    <span>Logged in as <a href="/player/{{steam_id}}">{{ username }}</a></span>
                     {% if avatar %}
                         <img src="{{ avatar }}"/>
                     {% endif %}

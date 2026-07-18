@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+{% block heading %}CC2 Fleet Database{% endblock %}
+
+{% block content %}
+<h3>Player</h3>
+<table>
+    <tr>
+        <th rowspan="2" style="vertical-align: top">
+            Name:
+        </th>
+        <td>
+            {{player.personaname}}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="{{player.steam.player.avatarmedium}}"/><br/>
+            <a href="{{player.steam.player.profileurl}}" target="_blank">Steam Profile</a>
+        </td>
+    </tr>
+    <tr>
+        <th>Admin:</th>
+        <td>
+            {% if player.admin %}
+            Yes
+            {% else %}
+            No
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Teams:</th>
+        <td>
+            {% for team in db.get_player_teams(player.steam_id)|sort %}
+                <a href="/team/{{team.name}}">{{ team.name }}</a>
+            {% endfor %}
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

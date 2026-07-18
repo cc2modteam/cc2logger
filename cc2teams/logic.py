@@ -2,7 +2,7 @@ import sqlite3
 from typing import Optional
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field
-from cc2admin.logic import lookup_username, get_steam_avatar, lookup_steam_user
+from cc2admin.logic import lookup_username, get_steam_avatar, lookup_steam_user, webserver_cfg
 
 
 @dataclass
@@ -11,6 +11,10 @@ class Player:
     @property
     def personaname(self) -> str:
         return lookup_username(str(self.steam_id))
+
+    @property
+    def admin(self) -> bool:
+        return webserver_cfg.lookup_admin(self.steam_id) != ""
 
     @property
     def avatar(self) -> str:
@@ -22,6 +26,10 @@ class Player:
         if user:
             return user.get("player", {}).get("profileurl", "")
         return ""
+
+    @property
+    def steam(self) -> dict:
+        return lookup_steam_user(str(self.steam_id))
 
     def __hash__(self):
         return hash(self.personaname)
@@ -108,6 +116,14 @@ class Database:
 
     def get_playerteam(self, team_name: str) -> Optional[PlayerTeam]:
         return self.playerteams.get(team_name, None)
+
+    def get_player_teams(self, steam_id) -> list[PlayerTeam]:
+        teams = []
+        steam_id = int(steam_id)
+        for t in self.playerteams.values():
+            if steam_id in t.owners or steam_id in t.members:
+                teams.append(t)
+        return teams
 
 
 db = Database()

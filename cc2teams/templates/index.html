@@ -4,23 +4,34 @@
 
 {% block content %}
 
-<table>
+<table class="teams">
     <tr>
         <th>Team</th>
         <th>Members</th>
+        <th>Actions</th>
     </tr>
 
     {% for teamname, team in db.playerteams|dictsort %}
     <tr>
         <td style="vertical-align: top; min-width: 2in;">
-            {{ teamname }}
+            <a href="/team/{{teamname}}">{{ teamname }}</a>
         </td>
         <td style="vertical-align: top">
             {% for player in team.get_member_players()|sort %}
-            <div>
-                <img src="{{player.avatar}}"/> {{ player.personaname }}
-            </div>
+            <table class="player">
+                <tr>
+                    <td><img src="{{player.avatar}}"/></td>
+                    <td><a href="/player/{{player.steam_id}}">{{ player.personaname }}</a></td>
+                </tr>
+            </table>
             {% endfor %}
+        </td>
+        <td style="vertical-align: top">
+            {% if user %}
+                {% if user.admin %}
+                    <button>Manage</button><br/>
+                {% endif %}
+            {% endif %}
         </td>
     </tr>
     {% endfor %}

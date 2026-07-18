@@ -22,8 +22,8 @@ body {
 }
 
 a:link, a:visited {
-    text-decoration: none;
-    color: black;
+    text-decoration: underline;
+    color: cornflowerblue;
 }
 a:hover {
     color: white;
@@ -32,6 +32,10 @@ a:hover {
 * {
     font-family: fixed;
     font-size: 24px;
+}
+
+th {
+    color: darkslategray;
 }
 
 button {
@@ -45,6 +49,7 @@ button {
     text-transform: uppercase;
     border-radius: 2mm;
     margin-bottom: 1mm;
+    text-decoration: none;
 }
 
 button:hover {
@@ -91,4 +96,24 @@ ul {
 
 .props td {
     vertical-align: text-top;
+}
+
+
+.player {
+    margin-bottom: 1mm;
+}
+
+.player img {
+    margin: 0;
+    margin-right: 1mm;
+    margin-left: 1mm;
+}
+
+.teams {
+    border-collapse: collapse;
+    min-width: 90%;
+}
+
+.teams tr {
+    border-bottom: 1px solid silver;
 }

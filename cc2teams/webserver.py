@@ -5,7 +5,7 @@ from pathlib import Path
 from flask import Flask, request, redirect, session, abort
 from pysteamsignin.steamsignin import SteamSignIn
 
-from cc2admin.logic import public_hostname
+from cc2admin.logic import public_hostname, lookup_steam_user
 from cc2admin.webserver import render_template as base_render_template
 from .logic import db
 import cc2admin
@@ -19,6 +19,11 @@ def render_template(
     template, **kwargs
 ) -> str:
     kwargs["db"] = db
+    kwargs["user"] = None
+    steam_id = session.get("steam_id", "")
+    if steam_id:
+        kwargs["user"] = db.get_player(int(steam_id))
+
     return base_render_template(template, **kwargs)
 
 
@@ -26,6 +31,12 @@ def render_template(
 def login():
     l = SteamSignIn()
     return l.RedirectUser(l.ConstructURL(f"{public_hostname}/steam-login"))
+
+
+@app.route("/player/<player>/")
+def view_player(player: str):
+    p = db.get_player(player)
+    return render_template("player.html", player=p)
 
 
 @app.route("/logout")

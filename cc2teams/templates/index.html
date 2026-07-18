@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+{% block heading %}CC2 Fleet Database{% endblock %}
+
+{% block content %}
+
+<table>
+    <tr>
+        <th>Team</th>
+        <th>Members</th>
+    </tr>
+
+    {% for teamname, team in db.playerteams|dictsort %}
+    <tr>
+        <td style="vertical-align: top; min-width: 2in;">
+            {{ teamname }}
+        </td>
+        <td style="vertical-align: top">
+            {% for player in team.get_member_players()|sort %}
+            <div>
+                <img src="{{player.avatar}}"/> {{ player.personaname }}
+            </div>
+            {% endfor %}
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+
+{% endblock %}

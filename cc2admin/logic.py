@@ -33,7 +33,7 @@ class WebserverConfig:
 
 
 
-@cached(cache=TTLCache(maxsize=32, ttl=300))
+@cached(cache=TTLCache(maxsize=64, ttl=600))
 def lookup_steam_user(steam_id: str) -> Optional[dict]:
     api_key = webserver_cfg.steam_key
     if api_key and steam_id:

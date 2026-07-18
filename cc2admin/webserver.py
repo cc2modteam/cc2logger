@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, session, abort
 from flask import render_template as flask_render_template
 from pysteamsignin.steamsignin import SteamSignIn
 from http import HTTPStatus
-from .logic import backends, public_hostname, webserver_cfg, get_steam_avatar
+from .logic import backends, public_hostname, webserver_cfg, get_steam_avatar, lookup_username
 from cc2control.types import Blueprints, Loadout
 
 
@@ -20,25 +20,20 @@ def render_template(
     if steam_id:
         avatar = get_steam_avatar(steam_id)
     kwargs["avatar"] = avatar
+    kwargs["username"] = lookup_username(steam_id)
+    kwargs["steam_id"] = steam_id
     return flask_render_template(template, **kwargs)
 
 
 @app.route("/")
 def home():
-    steam_id = session.get("steam_id")
-
-    username = webserver_cfg.lookup_admin(steam_id)
     server_names = sorted(webserver_cfg.backends.keys())
     servers = {}
     for name in server_names:
         ctx = backends[name]
         servers[name] = ctx
 
-    return render_template("index.html",
-                           steam_id=steam_id,
-                           username=username,
-                           servers=servers
-                           )
+    return render_template("index.html", servers=servers)
 
 @app.route("/home/<server>/")
 def server_home(server):
@@ -46,14 +41,11 @@ def server_home(server):
         abort(404)
 
     context = backends[server]
-    steam_id = session.get("steam_id")
     return render_template("serverhome.html",
                            context=context,
                            blueprints=Blueprints,
                            loadout=Loadout,
-                           steam_id=steam_id,
-                           server=server,
-                           username=webserver_cfg.lookup_admin(steam_id)
+                           server=server
                            )
 
 
@@ -62,14 +54,11 @@ def settings(server: str):
     if server not in backends:
         abort(404)
     context = backends[server]
-    steam_id = session.get("steam_id")
     return render_template("settings.html",
                            context=context,
                            blueprints=Blueprints,
                            loadout=Loadout,
-                           steam_id=steam_id,
-                           server=server,
-                           username=webserver_cfg.lookup_admin(steam_id)
+                           server=server
                            )
 
 @app.route("/<server>/wait")
@@ -77,13 +66,9 @@ def wait_page(server: str):
     if server not in backends:
         abort(404)
     context = backends[server]
-    steam_id = session.get("steam_id")
     return render_template("wait.html",
                            context=context,
-                           steam_id=steam_id,
-                           server=server,
-                           username=webserver_cfg.lookup_admin(steam_id)
-                           )
+                           server=server)
 
 @app.route("/<server>/configure", methods=["POST"])
 def configure(server: str):

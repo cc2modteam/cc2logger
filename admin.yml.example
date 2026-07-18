@@ -4,5 +4,9 @@ admin-users:
   76561199999999999: Bredroll
   76561199999999999: Kazzik
 
-runner-script:
-  Linux: "~/with_proton.sh"
+backends:
+  my-server:
+    host: https://localhost:40441/
+    key: certs/client.key
+    cert: certs/client.crt
+    ca: certs/ca.crt

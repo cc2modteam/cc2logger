@@ -1,6 +1,11 @@
-# Game log parser for Carrier Command 2
+# CC2 Server admin system
+## cc2control
 
-A simple python library for parsing jsonl files created by carrier command 2.
+A web interface for controlling one or more CC2 Dedicated servers.
+
+## Log Parser (cc2logger)
+
+Includes a hame log parser for Carrier Command 2, A simple python library for parsing jsonl files created by carrier command 2.
 
 Usage:
 ```

@@ -8,14 +8,25 @@
 <body>
     <div id="content">
         <h1>{% block heading %}{% endblock %}</h1>
-        <p>
-            <a href="/"><button>Home</button></a>
-        {% if steam_id %}
-             <button><a href="/logout">Logout</a></button> Logged in as {{ username }}
-        {% else %}
-             <a href="/login"><button>Login</button></a>
-        {% endif %}
-        </p>
+        <table style="width: 90%">
+            <tr>
+                <td style="text-align: left;">
+                    <a href="/"><button>Home</button></a>
+                </td>
+                <td style="text-align: right; vertical-align: middle">
+                {% if steam_id %}
+                    <span>Logged in as {{ username }}</span>
+                    {% if avatar %}
+                        <img src="{{ avatar }}"/>
+                    {% endif %}
+                    <button><a href="/logout">Logout</a></button>
+                {% else %}
+                    <a href="/login"><button>Login</button></a>
+                {% endif %}
+                </td>
+            </tr>
+        </table>
+
         {% block content %}
         {% endblock %}
     </div>

@@ -1,6 +1,7 @@
 """Main logic for webserver"""
 import os
 import ssl
+from typing import Optional
 
 import yaml
 import requests
@@ -31,14 +32,28 @@ class WebserverConfig:
         return ""
 
 
+
 @cached(cache=TTLCache(maxsize=32, ttl=300))
-def lookup_username(steam_id: str) -> str:
+def lookup_steam_user(steam_id: str) -> Optional[dict]:
     api_key = webserver_cfg.steam_key
     if api_key and steam_id:
         steam = Steam(api_key)
         user = steam.users.get_user_details(steam_id)
-        if user:
-            return user.get("player", {}).get("personaname", "")
+        return user
+    return None
+
+
+def lookup_username(steam_id: str) -> str:
+    user = lookup_steam_user(steam_id)
+    if user:
+        return user.get("player", {}).get("personaname", "")
+    return ""
+
+
+def get_steam_avatar(steam_id: str) -> str:
+    user = lookup_steam_user(steam_id)
+    if user:
+        return user.get("player", {}).get("avatar", "")
     return ""
 
 

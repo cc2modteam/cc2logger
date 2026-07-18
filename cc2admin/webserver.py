@@ -1,14 +1,26 @@
 import threading
 from secrets import token_bytes
 from flask import Flask, render_template, request, redirect, session, abort
+from flask import render_template as flask_render_template
 from pysteamsignin.steamsignin import SteamSignIn
 from http import HTTPStatus
-from .logic import backends, public_hostname, webserver_cfg, lookup_username
+from .logic import backends, public_hostname, webserver_cfg, get_steam_avatar
 from cc2control.types import Blueprints, Loadout
 
 
 app = Flask(__name__)
 app.secret_key = token_bytes(24)
+
+
+def render_template(
+    template, **kwargs
+) -> str:
+    steam_id = session.get("steam_id")
+    avatar = ""
+    if steam_id:
+        avatar = get_steam_avatar(steam_id)
+    kwargs["avatar"] = avatar
+    return flask_render_template(template, **kwargs)
 
 
 @app.route("/")

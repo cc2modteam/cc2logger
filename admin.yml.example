@@ -1,5 +1,7 @@
 # general cross-server admin configs
 
+steam-api-key: FFFFFFFFFFFFCCCCCCAAAAAABBBBBB
+
 admin-users:
   76561199999999999: Bredroll
   76561199999999999: Kazzik

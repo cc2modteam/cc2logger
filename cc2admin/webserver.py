@@ -3,9 +3,7 @@ from secrets import token_bytes
 from flask import Flask, render_template, request, redirect, session, abort
 from pysteamsignin.steamsignin import SteamSignIn
 from http import HTTPStatus
-
-from cc2control.controller import ServerController
-from .logic import backends, public_hostname, webserver_cfg
+from .logic import backends, public_hostname, webserver_cfg, lookup_username
 from cc2control.types import Blueprints, Loadout
 
 
@@ -151,6 +149,7 @@ def login():
 def logout():
     del session["steam_id"]
     return redirect("/")
+
 
 
 @app.route("/steam-login")

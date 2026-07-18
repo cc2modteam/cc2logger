@@ -4,12 +4,11 @@ import ssl
 
 import yaml
 import requests
+from steam_web_api import Steam
 from dataclasses import dataclass, field
 from pathlib import Path
 from cachetools import cached, TTLCache
 from requests.adapters import HTTPAdapter
-
-from cc2control.controller import ServerController
 
 public_hostname = str(os.environ.get("CC2_WEBSERVER_HOST", "http://localhost:5000"))
 
@@ -17,13 +16,30 @@ public_hostname = str(os.environ.get("CC2_WEBSERVER_HOST", "http://localhost:500
 @dataclass
 class WebserverConfig:
     hostname: str
+    steam_key: str = ""
     backends: dict[str, str] = field(default=dict)
     admins: dict[int, str] = field(default=dict)
 
     def lookup_admin(self, steam_id: str|int) -> str|None:
         if steam_id:
-            return self.admins.get(int(steam_id), "")
+            local_name = self.admins.get(int(steam_id), "")
+            if local_name:
+                steam_name = lookup_username(steam_id)
+                if steam_name:
+                    return steam_name
+                return local_name
         return ""
+
+
+@cached(cache=TTLCache(maxsize=32, ttl=300))
+def lookup_username(steam_id: str) -> str:
+    api_key = webserver_cfg.steam_key
+    if api_key and steam_id:
+        steam = Steam(api_key)
+        user = steam.users.get_user_details(steam_id)
+        if user:
+            return user.get("player", {}).get("personaname", "")
+    return ""
 
 
 def load_webserver_config() -> WebserverConfig:
@@ -33,8 +49,9 @@ def load_webserver_config() -> WebserverConfig:
     hostname = data.get("hostname", "localhost")
     backends = data.get("backends", {})
     admins = data.get("admin-users", {})
+    steam_key = data.get("steam-api-key", "")
 
-    return WebserverConfig(hostname=hostname, backends=backends, admins=admins)
+    return WebserverConfig(hostname=hostname, backends=backends, admins=admins, steam_key=steam_key)
 
 
 class CC2:

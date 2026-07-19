@@ -1,0 +1,10 @@
+FROM python:3-slim-trixie
+RUN apt-get -y update
+ADD dist/cc2admin-*.whl /
+RUN python3 -m pip install alt-profanity-check==1.9.0
+RUN python3 -m pip install $(ls -1 /cc2admin-*.whl|sort -n|tail -n1)
+
+
+VOLUME /data
+WORKDIR /data
+ENTRYPOINT python3 -m flask --app cc2teams.webserver run --host 0.0.0.0 --port 5001

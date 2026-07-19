@@ -13,10 +13,34 @@ db_dir = Path.cwd() / "teams-db"
 db_dir.mkdir(exist_ok=True)
 
 
+def can_manage(obj, user) -> bool:
+    uid = -1
+    if hasattr(obj, "owners"):
+        if isinstance(user, Player):
+            if user.admin:
+                return True
+            uid = user.steam_id
+        elif isinstance(user, int):
+            uid = user
+        return uid in obj.owners
+    return False
+
+def get_table_type_dict(t):
+    res = {}
+    if hasattr(t, "db") and hasattr(t, "read"):
+        for vid in t.db.keys():
+            res[vid] = t.read(str(vid))
+    return res
+
+
 @dataclass
 class Player(SingleRowDataModel):
     steam_id: int
     db = SqliteDict(str(db_dir / "player.sqlite"), autocommit=False)
+
+    @property
+    def prefix(self) -> str:
+        return "player"
 
     @property
     def primary_key(self) -> str:
@@ -58,11 +82,16 @@ class PlayerTeam(SingleRowDataModel):
     homepage: str = ""
     approved: bool = False
     public: bool = False
+    created: Optional[datetime] = None
     owners: list[int] = field(default_factory=list)
     members: list[int] = field(default_factory=list)
     pending_join: list[int] = field(default_factory=list)
 
     db = SqliteDict(str(db_dir / "playerteam.sqlite"), autocommit=False)
+
+    @property
+    def prefix(self) -> str:
+        return "team"
 
     @property
     def primary_key(self) -> str:
@@ -76,15 +105,11 @@ class PlayerTeam(SingleRowDataModel):
             return self.name < other.name
         return False
 
+    def delete(self):
+        db.delete_team(self)
+
     def can_manage(self, user: int|Player) -> bool:
-        uid = -1
-        if isinstance(user, Player):
-            if user.admin:
-                return True
-            uid = user.steam_id
-        elif isinstance(user, int):
-            uid = user
-        return uid in self.owners
+        return can_manage(self, user)
 
     def get_owner_players(self) -> set[Player]:
         players = []
@@ -139,22 +164,67 @@ class PlayerTeam(SingleRowDataModel):
 
 
 @dataclass
-class EventTeam:
-    event: int
-    number: int
-    max_players: int
-    reserve_size: int
-    members: list[int] = field(default_factory=list)
-    invited_members: list[int] = field(default_factory=list)
+class EventTeam(PlayerTeam):
+    max_players: int = 0
+    reserve_size: int = 0
+    event: int = 0
+
+    db = SqliteDict(str(db_dir / "eventteam.sqlite"), autocommit=False)
+
+    @property
+    def prefix(self) -> str:
+        return "eventteam"
 
 
 @dataclass
-class Event(SingleRowDataModel):
+class Event(PlayerTeam):
     id: str
     name: str
-    public: bool
-    start: datetime
-    duration: timedelta
+    start: Optional[datetime] = None
+    duration: timedelta = timedelta(hours=1)
+    public: bool = False
+    locked: bool = False
+    teams: list[str] = field(default_factory=list)
+    owners: list[int] = field(default_factory=list)
+
+    db = SqliteDict(str(db_dir / "event.sqlite"), autocommit=False)
+
+    def __lt__(self, other):
+        if self.start:
+            if hasattr(other, "start"):
+                return self.start < other.start
+        return True
+
+    def delete(self):
+        db.delete_event(self)
+
+    @property
+    def prefix(self) -> str:
+        return "event"
+
+    @property
+    def primary_key(self) -> str:
+        return self.id
+
+    def get_member_players(self) -> set[Player]:
+        return set()
+
+    def add_member(self, steam_id) -> bool:
+        return False
+
+    def add_pending(self, steam_id) -> bool:
+        return False
+
+    def remove_user(self, steam_id: int) -> None:
+        pass
+
+    @property
+    def pending_players(self) -> set[Player]:
+        return set()
+
+    @property
+    def players(self) -> set[Player]:
+        return set()
 
     @property
     def ended(self) -> bool:
@@ -162,9 +232,8 @@ class Event(SingleRowDataModel):
         end_time = self.start + self.duration
         return now > end_time
 
-    @property
-    def primary_key(self) -> str:
-        return self.id
+    def can_manage(self, user: int|Player) -> bool:
+        return can_manage(self, user)
 
 
 class Database:
@@ -173,12 +242,21 @@ class Database:
     def player_ids() -> set[int]:
         return set(int(x) for x in Player.db.keys())
 
+    @staticmethod
+    def event_ids() -> set[str]:
+        return set(x for x in Event.db.keys())
+
+    @staticmethod
+    def get_event(ident) -> Event|None:
+        return Event.read(ident)
+
+    @property
+    def events(self) -> dict[str, Event]:
+        return get_table_type_dict(Event)
+
     @property
     def playerteams(self) -> dict[str,PlayerTeam]:
-        res = {}
-        for vid in PlayerTeam.db.keys():
-            res[vid] = PlayerTeam.read(str(vid))
-        return res
+        return get_table_type_dict(PlayerTeam)
 
     def register_player(self, steam_id) -> Player:
         p = self.get_player(steam_id)
@@ -230,13 +308,22 @@ class Database:
             del PlayerTeam.db[team.primary_key]
             PlayerTeam.db.commit()
 
+    def team_name_exists(self, name) -> bool:
+        for t in self.playerteams.values():
+            if t.name.lower() == name.lower():
+                return True
+        return False
+
+    def delete_event(self, event: Event):
+        if event and event.id:
+            del Event.db[event.primary_key]
+            Event.db.commit()
+
+
 db = Database()
 #db.register_player(76561198309216806)
 #db.register_player(76561198372252544)
 #db.register_player(76561198808354666)
-
-grno = db.get_team("0838cd12-3040-4a6d-9732-ecf2c0bc76de")
-grno.add_pending(76561198309216806)
 
 # canned data
 # bred = Player(steam_id=76561198074375146)

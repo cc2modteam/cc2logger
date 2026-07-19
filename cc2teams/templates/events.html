@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}CC2 Events{% endblock %}
+{% block heading %}CC2 Fleet Database{% endblock %}
+
+{% block content %}
+<h3>Events</h3>
+<table>
+    {% for evt in events.values()|sort %}
+    {% if evt.public or evt.can_manage(user) %}
+    <tr>
+        <td><a href="/event/{{evt.id}}">{{evt.name}}</a></td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}CC2 Event - {{ event.name }}{% endblock %}
+{% block heading %}CC2 Fleet Database{% endblock %}
+
+{% block content %}
+<h3>Event</h3>
+<table>
+    <tr>
+        <th>Name:</th>
+        <td>{{event.name}}</td>
+    </tr>
+    {% if event.start %}
+    <tr>
+        <th>Start at:</th>
+        <td>{{event.start}} ({{event.duration.seconds // 60}} minute event)</td>
+    </tr>
+    {% endif %}
+    <tr>
+        <th>Created at:</th>
+        <td>{{event.created}}</td>
+    </tr>
+    <tr>
+        <th>Id:</th>
+        <td>{{event.id}}</td>
+    </tr>
+    <tr>
+        <th>Public:</th>
+        <td>{{event.public}}</td>
+    </tr>
+    {% if user %}
+    <tr>
+        <th>Options:</th>
+        <td>
+            {% if event.can_manage(user) %}
+            <form method="post" action="/confirm/event/{{event.id}}/delete"><button>Delete Event</button></form>
+                {% if event.public %}
+            <form method="post" action="/confirm/event/{{event.id}}/public/private/1"><button>Set Private</button></form>
+                {% else %}
+            <form method="post" action="/confirm/event/{{event.id}}/public/public/1"><button>Set Public</button></form>
+                {% endif %}
+            {% endif %}
+        </td>
+    </tr>
+    {% endif %}
+
+</table>
+
+{% endblock %}

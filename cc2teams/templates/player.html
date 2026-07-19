@@ -13,6 +13,7 @@
             {{player.personaname}}
         </td>
     </tr>
+
     {% if player.steam %}
     <tr>
         <td>
@@ -21,6 +22,14 @@
         </td>
     </tr>
     {% endif %}
+
+    {% if user and user.admin %}
+    <tr>
+        <th>Steam ID64:</th>
+        <td>{{player.steam_id}}</td>
+    </tr>
+    {% endif %}
+
     <tr>
         <th>Admin:</th>
         <td>

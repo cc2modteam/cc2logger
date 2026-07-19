@@ -45,6 +45,14 @@
     <tr>
         <th>Members:</th>
         <td style="vertical-align: top">
+            {% if user and user.admin %}
+            <form method="post" action="/admin/team/{{team.id}}/add">
+            <input type="text" name="add_steam_player">
+            <button type="submit">Add Member (admin)</button>
+            </form>
+            <hr>
+            {% endif %}
+
             {% if user %}
             <table class="player">
                 {% for player in team.get_member_players()|sort %}

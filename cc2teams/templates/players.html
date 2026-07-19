@@ -4,6 +4,14 @@
 
 {% block content %}
 <h3>Players</h3>
+{% if user and user.admin %}
+<form method="post" action="/admin/player/add">
+    <input type="text" name="add_steam_player">
+    <button type="submit">Add Player (admin)</button>
+</form>
+<hr>
+
+{% endif %}
 <table>
     {% for player in players|sort %}
     <tr>

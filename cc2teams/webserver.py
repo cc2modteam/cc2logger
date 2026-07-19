@@ -9,7 +9,7 @@ from typing import Optional
 from flask import Flask, request, redirect, session, abort
 from pysteamsignin.steamsignin import SteamSignIn
 
-from cc2admin.logic import public_hostname
+from cc2admin.logic import public_hostname, lookup_steam_user
 from cc2admin.webserver import render_template as base_render_template
 from .logic import db, Player, PlayerTeam, Event, EventTeam
 import cc2admin
@@ -136,7 +136,8 @@ def join_event_team(event: str, eteam: str):
         abort(HTTPStatus.BAD_REQUEST)
     if e_team.event != e.id:
         abort(HTTPStatus.BAD_REQUEST)
-    e.join_team(e_team, user)
+    if not e.ended or user.admin:
+        e.join_team(e_team, user)
     return redirect(f"/event/{event}")
 
 @app.post("/event/<string:event>/leave")
@@ -369,6 +370,41 @@ def do_subject_action(t, action: str, apply: str, value: str):
         return redirect("/")
     abort(HTTPStatus.UNAUTHORIZED)
 
+@app.post("/admin/player/add")
+def admin_add_player():
+    user = authenticated()
+    if not user or not user.admin:
+        abort(HTTPStatus.FORBIDDEN)
+
+    data = request.form
+    player_id = data.get("add_steam_player")
+    steam_player = lookup_steam_user(player_id)
+    if steam_player:
+        db.register_player(int(player_id))
+    return redirect("/players")
+
+@app.post("/admin/team/<string:team>/add")
+def admin_join_player(team: str):
+    return do_admin_join_team(PlayerTeam.read(team), user)
+
+@app.post("/admin/eventteam/<string:eteam>/add")
+def admin_join_event_player(eteam: str):
+    return do_admin_join_team(EventTeam.read(eteam))
+
+def do_admin_join_team(t):
+    user = authenticated()
+    if not user or not user.admin:
+        abort(HTTPStatus.FORBIDDEN)
+    data = request.form
+    if not t:
+        abort(HTTPStatus.BAD_REQUEST)
+    player_id = data.get("add_steam_player")
+    steam_player = lookup_steam_user(player_id)
+    if steam_player:
+        db.register_player(int(player_id))
+        t.add_member(player_id)
+        t.write()
+    return redirect(f"/event/{t.event}")
 
 @app.route("/logout")
 def logout():

@@ -66,6 +66,14 @@
                             {% endif %}
                         {% endif %}
                         <div>
+                        {% if user and user.admin %}
+                            <form method="post" action="/admin/eventteam/{{team.id}}/add">
+                            <input size="7" type="text" name="add_steam_player">
+                            <button type="submit" class="small">+</button>
+                            </form>
+                            <hr>
+                        {% endif %}
+
                             <table>
                         {% for player in team.players|sort %}
                                 <tr>

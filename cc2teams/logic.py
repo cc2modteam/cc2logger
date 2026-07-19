@@ -2,12 +2,25 @@ import sqlite3
 from typing import Optional
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field
+from pathlib import Path
+from sqlitedict import SqliteDict
+from dataclasses_sqlitedict import SingleRowDataModel
 from cc2admin.logic import lookup_username, get_steam_avatar, lookup_steam_user, webserver_cfg
 
 
+db_dir = Path.cwd() / "teams-db"
+db_dir.mkdir(exist_ok=True)
+
+
 @dataclass
-class Player:
+class Player(SingleRowDataModel):
     steam_id: int
+    db = SqliteDict(str(db_dir / "player.sqlite"), autocommit=False)
+
+    @property
+    def primary_key(self) -> str:
+        return str(self.steam_id)
+
     @property
     def personaname(self) -> str:
         return lookup_username(str(self.steam_id))
@@ -38,15 +51,39 @@ class Player:
         return self.personaname < other.personaname
 
 @dataclass()
-class PlayerTeam:
+class PlayerTeam(SingleRowDataModel):
+    id: int
     name: str
     homepage: str = ""
     approved: bool = False
+    public: bool = False
     owners: list[int] = field(default_factory=list)
     members: list[int] = field(default_factory=list)
+    pending_join: list[int] = field(default_factory=list)
+
+    db = SqliteDict(str(db_dir / "playerteam.sqlite"), autocommit=False)
+
+    @property
+    def primary_key(self) -> str:
+        return str(self.id)
 
     def __hash__(self):
         return hash(self.name)
+
+    def __lt__(self, other):
+        if other and isinstance(other, type(self)):
+            return self.name < other.name
+        return False
+
+    def can_manage(self, user: int|Player) -> bool:
+        uid = -1
+        if isinstance(user, Player):
+            if user.admin:
+                return True
+            uid = user.steam_id
+        elif isinstance(user, int):
+            uid = user
+        return uid in self.owners
 
     def get_owner_players(self) -> set[Player]:
         players = []
@@ -60,12 +97,43 @@ class PlayerTeam:
             players.add(db.get_player(pid))
         return players
 
+    @property
+    def players(self) -> set[Player]:
+        owners = self.get_owner_players()
+        return owners.union(self.get_member_players())
+
+    @property
+    def pending_players(self) -> set[Player]:
+        pend = set()
+        for sid in self.pending_join:
+            p = db.get_player(sid)
+            if p:
+                pend.add(p)
+                self.write()
+
+        return pend
+
     def add_member(self, steam_id) -> bool:
         p = db.get_player(steam_id)
         if p:
             self.members.append(p.steam_id)
+            self.write()
             return True
         return False
+
+    def add_pending(self, steam_id) -> bool:
+        if steam_id not in self.members and steam_id not in self.owners and steam_id not in self.pending_join:
+            self.pending_join.append(steam_id)
+            self.write()
+            return True
+        return False
+
+    def remove_user(self, steam_id: int) -> None:
+        if steam_id in self.pending_players:
+            self.pending_join.remove(steam_id)
+        if steam_id in self.members:
+            self.members.remove(steam_id)
+        self.write()
 
 
 @dataclass
@@ -94,25 +162,37 @@ class Event:
 
 
 class Database:
-    def __init__(self):
-        self.players: dict[int, Player] = {}
-        self.playerteams: dict[str, PlayerTeam] = {}
+
+    @staticmethod
+    def player_ids() -> set[int]:
+        return set(int(x) for x in Player.db.keys())
+
+    @property
+    def playerteams(self) -> dict[int,PlayerTeam]:
+        res = {}
+        for vid in PlayerTeam.db.keys():
+            res[vid] = PlayerTeam.read(str(vid))
+        return res
 
     def register_player(self, steam_id) -> Player:
         p = self.get_player(steam_id)
         if not p:
             p = Player(int(steam_id))
             if p.personaname:
-                self.players[p.steam_id] = p
+                p.write()
         return p
 
     def unregister_player(self, steam_id) -> None:
         steam_id = int(steam_id)
         if steam_id in self.players:
-            del self.players[steam_id]
+            del Player.db[str(steam_id)]
+            Player.db.commit()
 
     def get_player(self, steam_id) -> Optional[Player]:
-        return self.players.get(int(steam_id), None)
+        if int(steam_id) in self.player_ids():
+            p = Player.read(str(steam_id))
+            return p
+        return None
 
     def get_playerteam(self, team_name: str) -> Optional[PlayerTeam]:
         return self.playerteams.get(team_name, None)
@@ -125,27 +205,70 @@ class Database:
                 teams.append(t)
         return teams
 
+    def team_ids(self) -> set[int]:
+        return set(int(x) for x in PlayerTeam.db.keys())
+
+    def get_team(self, team: str|int) -> Optional[PlayerTeam]:
+        ids = self.team_ids()
+        if isinstance(team, int) or str(team).isnumeric():
+            if int(team) in ids:
+                return PlayerTeam.read(str(team))
+        elif isinstance(team, str):
+            for tid in ids:
+                t = PlayerTeam.read(str(tid))
+                if t and t.name == team:
+                    return t
+        return None
 
 db = Database()
+
 # canned data
-bred = Player(steam_id=76561198074375146)
-kazzik = Player(steam_id=76561198309216806)
-point = Player(steam_id=76561198372252544)
-
-grno = PlayerTeam("GRNO", "", owners=[
-    bred.steam_id,
-    kazzik.steam_id,
-])
-delta = PlayerTeam("Delta Fleet", "", owners=[
-    point.steam_id
-])
-
-db.players = {
-    bred.steam_id: bred,
-    kazzik.steam_id: kazzik,
-    point.steam_id: point,
-}
-db.playerteams = {
-    delta.name: delta,
-    grno.name: grno,
-}
+# bred = Player(steam_id=76561198074375146)
+# kazzik = Player(steam_id=76561198309216806)
+# point = Player(steam_id=76561198372252544)
+# db.players = {
+#     bred.steam_id: bred,
+#     kazzik.steam_id: kazzik,
+#     point.steam_id: point,
+# }
+#
+# test = PlayerTeam(1, "Test Team", "", public=True, owners=[
+#     kazzik.steam_id,
+# ])
+# test.add_member(point.steam_id)
+#
+# grno = PlayerTeam(2, "GRNO", "", public=True,
+#                   owners=[
+#                       # bred.steam_id,
+#                       kazzik.steam_id,
+#                   ],
+#                   members=[
+#                       bred.steam_id
+#                   ]
+#                   )
+# delta = PlayerTeam(3, "Delta Fleet", "",
+#                    public=True,
+#                    owners=[
+#                        point.steam_id
+#                    ])
+# delta.add_member(point.steam_id)
+# delta.add_member(bred.steam_id)
+#
+# db.players = {
+#     bred.steam_id: bred,
+#     kazzik.steam_id: kazzik,
+#     point.steam_id: point,
+# }
+# db.playerteams = {
+#     delta.id: delta,
+#     grno.id: grno,
+#     test.id: test,
+# }
+#
+#
+# bred.write()
+# kazzik.write()
+# point.write()
+# grno.write()
+# test.write()
+# delta.write()

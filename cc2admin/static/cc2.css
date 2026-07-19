@@ -36,6 +36,8 @@ a:hover {
 
 th {
     color: darkslategray;
+    text-align: left;
+    vertical-align: top;
 }
 
 button {
@@ -50,6 +52,14 @@ button {
     border-radius: 2mm;
     margin-bottom: 1mm;
     text-decoration: none;
+}
+
+a button {
+    text-decoration: none;
+}
+
+.small {
+    min-width: 1cm;
 }
 
 button:hover {

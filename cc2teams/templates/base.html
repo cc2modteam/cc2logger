@@ -11,8 +11,10 @@
         <table style="width: 90%">
             <tr>
                 <td style="text-align: left;">
-                    <a href="/"><button>Home</button></a>
-                    <a href="/events"><button>Events</button></a>
+                    <a href="/"><button>Teams</button></a>
+                    <!--
+                    <a href="/events"><button disabled="disabled">Events</button></a>
+                    -->
                 </td>
                 <td style="text-align: right; vertical-align: middle">
                 {% if steam_id %}
@@ -20,7 +22,7 @@
                     {% if avatar %}
                         <img src="{{ avatar }}"/>
                     {% endif %}
-                    <button><a href="/logout">Logout</a></button>
+                    <a href="/logout"><button>Logout</button></a>
                 {% else %}
                     <a href="/login"><button>Login</button></a>
                 {% endif %}

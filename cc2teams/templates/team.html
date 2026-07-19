@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}CC2 Team - {{ team.name }}{% endblock %}
+{% block heading %}CC2 Fleet Database{% endblock %}
+
+{% block content %}
+<h3>Team</h3>
+<table>
+    <tr>
+        <th>Name:</th>
+        <td>{{team.name}}</td>
+    </tr>
+    <tr>
+        <th>Id:</th>
+        <td>{{team.id}}</td>
+    </tr>
+    {% if user %}
+    <tr>
+        <th>Options:</th>
+        <td>
+
+            {% if user.steam_id in team.members %}
+                <form method="post" action="/team/{{team.id}}/player/remove/{{user.steam_id}}"><button>Leave Team</button></form>
+            {% else %}
+                {% if user.steam_id not in team.pending_join %}
+                <form method="post" action="/team/{{team.id}}/player/join"><button>Join Team</button></form>
+                {% else %}
+                <button disabled="disabled">Join Pending</button>
+                {% endif %}
+            {% endif %}
+
+        </td>
+    </tr>
+    {% endif %}
+    <tr>
+        <th>Members:</th>
+        <td style="vertical-align: top">
+            <table class="player">
+            {% for player in team.get_member_players()|sort %}
+                <tr>
+                    <td>
+                    {% if team.can_manage(user) %}
+                        <form method="post" action="/team/{{team.id}}/player/remove/{{player.steam_id}}"><button class="small">x</button></form>
+                    {% endif %}
+                    </td>
+                    <td>
+                    {% if player.steam_id in team.owners %}
+                        {% if team.can_manage(user) %}
+                        <form method="post" action="/team/{{team.id}}/owner/remove/{{player.steam_id}}"><button>REMOVE MANAGER</button></form>
+                        {% else %}
+                        MANAGER
+                        {% endif %}
+                    {% else %}
+                        {% if team.can_manage(user) %}
+                        <form method="post" action="/team/{{team.id}}/owner/add/{{player.steam_id}}"><button>SET MANAGER</button></form>
+                        {% endif %}
+                    {% endif %}
+                    </td>
+                    <td><img src="{{player.avatar}}"/></td>
+                    <td><a href="/player/{{player.steam_id}}">{{ player.personaname }}</a></td>
+                </tr>
+            {% endfor %}
+            </table>
+        </td>
+    </tr>
+    {% if user and team.can_manage(user) %}
+    <tr>
+        <th>Join Requests</th>
+        <td style="vertical-align: top">
+            <table class="player">
+            {% for player in team.pending_players|sort %}
+                <tr>
+                    <td>
+                    <form method="post" action="/team/{{team.id}}/pending/approve/{{player.steam_id}}"><button>Approve</button></form>
+                    <form method="post" action="/team/{{team.id}}/pending/deny/{{player.steam_id}}"><button>Deny</button></form>
+                    </td>
+                    <td><img src="{{player.avatar}}"/></td>
+                    <td><a href="/player/{{player.steam_id}}">{{ player.personaname }}</a></td>
+                </tr>
+
+            {% endfor %}
+            </table>
+        </td>
+    </tr>
+    {% endif %}
+</table>
+
+{% endblock %}

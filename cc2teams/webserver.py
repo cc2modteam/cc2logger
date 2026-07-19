@@ -385,7 +385,7 @@ def admin_add_player():
 
 @app.post("/admin/team/<string:team>/add")
 def admin_join_player(team: str):
-    return do_admin_join_team(PlayerTeam.read(team), user)
+    return do_admin_join_team(PlayerTeam.read(team))
 
 @app.post("/admin/eventteam/<string:eteam>/add")
 def admin_join_event_player(eteam: str):
@@ -404,7 +404,9 @@ def do_admin_join_team(t):
         db.register_player(int(player_id))
         t.add_member(player_id)
         t.write()
-    return redirect(f"/event/{t.event}")
+    if hasattr(t, "event"):
+        return redirect(f"/event/{t.event}")
+    return redirect(f"/{t.prefix}/{t.id}")
 
 @app.route("/logout")
 def logout():

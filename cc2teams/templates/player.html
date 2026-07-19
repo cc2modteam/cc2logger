@@ -13,12 +13,14 @@
             {{player.personaname}}
         </td>
     </tr>
+    {% if player.steam %}
     <tr>
         <td>
             <img src="{{player.steam.player.avatarmedium}}"/><br/>
             <a href="{{player.steam.player.profileurl}}" target="_blank">Steam Profile</a>
         </td>
     </tr>
+    {% endif %}
     <tr>
         <th>Admin:</th>
         <td>
@@ -29,6 +31,7 @@
             {% endif %}
         </td>
     </tr>
+    {% if player %}
     <tr>
         <th>Teams:</th>
         <td>
@@ -37,6 +40,7 @@
             {% endfor %}
         </td>
     </tr>
+    {% endif %}
 </table>
 
 {% endblock %}

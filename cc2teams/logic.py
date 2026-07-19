@@ -1,4 +1,5 @@
-import sqlite3
+
+import random
 from typing import Optional
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field
@@ -52,7 +53,7 @@ class Player(SingleRowDataModel):
 
 @dataclass()
 class PlayerTeam(SingleRowDataModel):
-    id: int
+    id: str
     name: str
     homepage: str = ""
     approved: bool = False
@@ -65,7 +66,7 @@ class PlayerTeam(SingleRowDataModel):
 
     @property
     def primary_key(self) -> str:
-        return str(self.id)
+        return self.id
 
     def __hash__(self):
         return hash(self.name)
@@ -122,7 +123,8 @@ class PlayerTeam(SingleRowDataModel):
         return False
 
     def add_pending(self, steam_id) -> bool:
-        if steam_id not in self.members and steam_id not in self.owners and steam_id not in self.pending_join:
+        steam_id = int(steam_id)
+        if steam_id not in self.members and steam_id not in self.pending_join:
             self.pending_join.append(steam_id)
             self.write()
             return True
@@ -147,8 +149,8 @@ class EventTeam:
 
 
 @dataclass
-class Event:
-    id: int
+class Event(SingleRowDataModel):
+    id: str
     name: str
     public: bool
     start: datetime
@@ -160,6 +162,10 @@ class Event:
         end_time = self.start + self.duration
         return now > end_time
 
+    @property
+    def primary_key(self) -> str:
+        return self.id
+
 
 class Database:
 
@@ -168,7 +174,7 @@ class Database:
         return set(int(x) for x in Player.db.keys())
 
     @property
-    def playerteams(self) -> dict[int,PlayerTeam]:
+    def playerteams(self) -> dict[str,PlayerTeam]:
         res = {}
         for vid in PlayerTeam.db.keys():
             res[vid] = PlayerTeam.read(str(vid))
@@ -205,22 +211,32 @@ class Database:
                 teams.append(t)
         return teams
 
-    def team_ids(self) -> set[int]:
-        return set(int(x) for x in PlayerTeam.db.keys())
+    def team_ids(self) -> set[str]:
+        return set(x for x in PlayerTeam.db.keys())
 
-    def get_team(self, team: str|int) -> Optional[PlayerTeam]:
+    def get_team(self, team: str) -> Optional[PlayerTeam]:
         ids = self.team_ids()
-        if isinstance(team, int) or str(team).isnumeric():
-            if int(team) in ids:
-                return PlayerTeam.read(str(team))
+        if team in ids:
+            return PlayerTeam.read(team)
         elif isinstance(team, str):
             for tid in ids:
-                t = PlayerTeam.read(str(tid))
-                if t and t.name == team:
+                t = PlayerTeam.read(tid)
+                if t and t.name.lower() == team.lower():
                     return t
         return None
 
+    def delete_team(self, team: PlayerTeam):
+        if team and team.id in self.team_ids():
+            del PlayerTeam.db[team.primary_key]
+            PlayerTeam.db.commit()
+
 db = Database()
+#db.register_player(76561198309216806)
+#db.register_player(76561198372252544)
+#db.register_player(76561198808354666)
+
+grno = db.get_team("0838cd12-3040-4a6d-9732-ecf2c0bc76de")
+grno.add_pending(76561198309216806)
 
 # canned data
 # bred = Player(steam_id=76561198074375146)

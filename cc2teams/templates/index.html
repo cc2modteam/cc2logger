@@ -3,20 +3,33 @@
 {% block heading %}CC2 Fleet Database{% endblock %}
 
 {% block content %}
+{% if user %}
+<table>
+    <tr>
+        <td>
+            <a href="/new/team">
+                <button>New Team</button>
+            </a>
+        </td>
+    </tr>
+</table>
+
+{% endif %}
 
 <table class="teams">
     <tr>
-        <th style="width: 2in">Team</th>
+        <th style="min-width: 3in; width: 3in;">Team</th>
         <th>Members</th>
     </tr>
 
     {% for team in db.playerteams.values()|sort %}
-    {% if team.public %}
+    {% if team.public or team.can_manage(user) %}
     <tr>
         <td style="vertical-align: top; min-width: 2in;">
             <a href="/team/{{team.id}}">{{ team.name }}</a>
         </td>
         <td style="vertical-align: top">
+            {% if user %}
             <table class="player">
                 {% for player in team.players|sort %}
                 <tr>
@@ -25,6 +38,9 @@
                 </tr>
                 {% endfor %}
             </table>
+            {% else %}
+            {{ team.members|length }}
+            {% endif %}
         </td>
     </tr>
     {% endif %}

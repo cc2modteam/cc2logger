@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Create New Team {% endblock %}
+{% block heading %}CC2 Fleet Database{% endblock %}
+
+{% block content %}
+<h3>New Team</h3>
+<form method="post" action="/team/new" id="new">
+    <table>
+        <tr>
+            <th>
+                Name:
+            </th>
+            <td>
+                <input type="text" name="name">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <p>
+                    <b>DISCLAIMER:</b> CC2 Fleet Database tries to detect offensive team names automatically.
+                    Offensive team name that are not detected and are reported will be removed and your Steam account will be reported.
+                </p>
+                <p>
+                <button type="submit" form="new">
+                    Create
+                </button>
+                </p>
+            </td>
+        </tr>
+    </table>
+
+</form>
+
+
+{% endblock %}

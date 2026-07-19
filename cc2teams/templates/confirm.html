@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block heading %} Confirm {% endblock %}
+{% block content %}
+<div>
+    <p>
+        {{message}}
+    </p>
+    {% if apply and value %}
+    <form method="post" action="/{{subject_type}}/{{subject}}/{{action}}/{{apply}}/{{value}}">
+    {% else %}
+        {% if apply %}
+    <form method="post" action="/{{subject_type}}/{{subject}}/{{action}}/{{apply}}">
+        {% else %}
+    <form method="post" action="/{{subject_type}}/{{subject}}/{{action}}">
+        {% endif %}
+    {% endif %}
+        <button id="confirm" type="submit" name="confirm" value="yes">CONFIRM</button>
+    </form>
+</div>
+
+{% endblock %}

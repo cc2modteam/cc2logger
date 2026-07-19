@@ -1,6 +1,7 @@
 """Main logic for webserver"""
 import os
 import ssl
+import time
 from typing import Optional
 
 import yaml
@@ -32,13 +33,33 @@ class WebserverConfig:
         return ""
 
 
+steam_rate_limit = {
+    "max": 15,
+    "max_rate": 5,
+    "reqs": []
+}
 
 @cached(cache=TTLCache(maxsize=64, ttl=600))
 def lookup_steam_user(steam_id: str) -> Optional[dict]:
     api_key = webserver_cfg.steam_key
     if api_key and steam_id:
+
+        now = time.monotonic()
+        max_hist = steam_rate_limit["max"]
+        reqs = steam_rate_limit["reqs"]
+        if len(reqs) > max_hist:
+            steam_rate_limit["reqs"] = steam_rate_limit["reqs"][-max_hist:]
+        reqs = steam_rate_limit["reqs"]
+        count = len(reqs)
+        if count > 0:
+            oldest = min(reqs)
+            rate = now - oldest / count
+            if rate > steam_rate_limit["max_rate"]:
+                time.sleep(0.2)
+
         steam = Steam(api_key)
         user = steam.users.get_user_details(steam_id)
+        steam_rate_limit["reqs"].append(now)
         return user
     return None
 

@@ -1,19 +1,21 @@
 """CC2 Team manager server"""
+import uuid
 from http import HTTPStatus
 from secrets import token_bytes
 from pathlib import Path
 from flask import Flask, request, redirect, session, abort
 from pysteamsignin.steamsignin import SteamSignIn
-
-from cc2admin.logic import public_hostname, lookup_steam_user
+import profanity_check
+from cc2admin.logic import public_hostname
 from cc2admin.webserver import render_template as base_render_template
-from .logic import db, Player
+from .logic import db, Player, PlayerTeam
 import cc2admin
 
 static_dir = Path(cc2admin.__file__).parent / "static"
 
 app = Flask(__name__, static_folder=static_dir)
 app.secret_key = token_bytes(24)
+app.url_map.strict_slashes = False
 
 def authenticated() -> Player|None:
     uid = session.get("steam_id", "")
@@ -37,20 +39,35 @@ def login():
 
 @app.route("/player/<player>/")
 def view_player(player: str):
-    p = db.get_player(player)
-    return render_template("player.html", player=p)
+    user = authenticated()
+    if user:
+        p = db.get_player(player)
+        if not p:
+            abort(404)
+        return render_template("player.html", player=p)
+    return redirect("/login")
 
+@app.route("/players")
+def view_players():
+    user = authenticated()
+    players = []
+    if user:
+        player_ids = db.player_ids()
+        for pid in player_ids:
+            players.append(db.get_player(pid))
+
+    return render_template("players.html", players=players)
 
 @app.route("/team/<team>/")
-def view_team(team: str|int):
+def view_team(team: str):
     t = db.get_team(team)
     if not t:
         abort(404)
     return render_template("team.html", team=t)
 
 
-@app.post("/team/<int:team>/player/join")
-def join_team(team: int):
+@app.post("/team/<string:team>/player/join")
+def join_team(team: str):
     user = authenticated()
     if user:
         t = db.get_team(team)
@@ -61,10 +78,114 @@ def join_team(team: int):
     return redirect("/login")
 
 
-@app.post("/team/<int:team>/<string:action>/<string:apply>/<string:value>")
-def team_action(team: int, action: str, apply: str, value: str):
+@app.post("/team/<string:team>/delete/")
+def delete_team(team: str):
     user = authenticated()
     if user:
+        form = request.form
+        confirm_action = form.get("confirm")
+        if confirm_action != "yes":
+            return redirect(f"/confirm/team/{team}/delete/")
+
+        t = db.get_team(team)
+        if t and t.can_manage(user):
+            db.delete_team(t)
+        return redirect("/")
+    return redirect("/login")
+
+@app.route("/new/team")
+def new_team_form():
+    return render_template("new-team.html")
+
+@app.post("/team/new")
+def create_team():
+    user = authenticated()
+    if user:
+        data = request.form
+        name = data.get("name", "").strip()
+        url = data.get("homepage", "")
+        reject = ""
+        if name:
+            if len(name) > 63:
+                reject = "Name too long"
+            else:
+                p1 = profanity_check.predict([name])
+                if 1 in p1:
+                    reject = "Profanity checker rejected team name"
+                p2 = profanity_check.predict([url])
+                if 1 in p2:
+                    reject = "Profanity checker rejected team homepage"
+
+                existing = db.get_team(name)
+                if existing:
+                    reject = "A team with this name already exists"
+
+            if reject:
+                return render_template("/error.html", message=reject)
+
+            new_id = str(uuid.uuid4())
+            new_team = PlayerTeam(new_id, name, url)
+            new_team.owners = [user.steam_id]
+            new_team.add_member(user.steam_id)
+            return redirect(f"/team/{new_id}")
+
+        else:
+            return redirect("/new/team")
+
+    abort(401)
+
+
+@app.post("/confirm/<string:subject_type>/<string:subject>/<string:action>/<string:apply>/<string:value>")
+@app.post("/confirm/<string:subject_type>/<string:subject>/<string:action>/<string:apply>")
+@app.post("/confirm/<string:subject_type>/<string:subject>/<string:action>")
+def confirm(subject_type: str, subject: str, action: str, apply: str = "", value: str = ""):
+    user = authenticated()
+    if user:
+        if subject_type == "team":
+            t = db.get_team(subject)
+            if not t:
+                abort(HTTPStatus.NOT_FOUND)
+            if t.can_manage(user):
+                message = f"{subject_type} '{t.name}' {action} > {apply}?"
+                if action == "delete":
+                    message = f"Delete {subject_type} '{t.name}'?"
+                elif action == "owner":
+                    p = db.get_player(int(value))
+                    if not p:
+                        abort(HTTPStatus.BAD_REQUEST)
+                    message = f"{apply} '{p.personaname}' as '{t.name}' manager?"
+
+                elif action == "player":
+                    if apply == "remove":
+                        if value == str(user.steam_id):
+                            message = f"Leave team '{t.name}'?"
+                        else:
+                            p = db.get_player(int(value))
+                            if not p:
+                                abort(HTTPStatus.BAD_REQUEST)
+                            message = f"Remove '{p.personaname}' from team '{t.name}'?"
+
+                    elif apply == "join":
+                        message = f"Join team '{t.name}'?"
+                return render_template("confirm.html", team=t,
+                                       message = message,
+                                       subject_type=subject_type,
+                                       subject=subject,
+                                       action=action,
+                                       apply=apply,
+                                       value=value)
+        abort(HTTPStatus.FORBIDDEN)
+    abort(HTTPStatus.UNAUTHORIZED)
+
+@app.post("/team/<string:team>/<string:action>/<string:apply>/<string:value>")
+def team_action(team: str, action: str, apply: str, value: str):
+    user = authenticated()
+    if user:
+        form = request.form
+        confirm_action = form.get("confirm")
+        if confirm_action != "yes":
+            return redirect(f"/confirm/team/{team}/{action}/{apply}/{value}")
+
         t = db.get_team(team)
         if not t:
             abort(HTTPStatus.NOT_FOUND)
@@ -76,6 +197,7 @@ def team_action(team: int, action: str, apply: str, value: str):
 
             if not t.can_manage(user):
                 abort(HTTPStatus.FORBIDDEN)
+
             if action == "pending":
                 uid = int(value)
                 if apply in ["approve", "deny"]:
@@ -84,8 +206,11 @@ def team_action(team: int, action: str, apply: str, value: str):
                         t.write()
                     if apply == "approve":
                         u = db.get_player(uid)
-                        if u and uid not in t.members and uid not in t.owners:
+                        if u and uid not in t.members:
                             t.add_member(uid)
+            elif action == "public":
+                t.public = apply == "public"
+                t.write()
             elif action == "player":
                 if apply == "remove":
                     t.remove_user(int(value))
@@ -125,4 +250,9 @@ def steam_login():
                                message="Steam verification failed",
                                code=HTTPStatus.UNAUTHORIZED), HTTPStatus.UNAUTHORIZED.value
     session["steam_id"] = steam_id
+
+    user = db.get_player(int(steam_id))
+    if not user:
+        Player(int(steam_id)).write()
+
     return redirect("/")

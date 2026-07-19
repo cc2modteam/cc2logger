@@ -12,9 +12,12 @@
             <tr>
                 <td style="text-align: left;">
                     <a href="/"><button>Teams</button></a>
+                    {% if user %}
+                    <a href="/players"><button>Players</button></a>
                     <!--
                     <a href="/events"><button disabled="disabled">Events</button></a>
                     -->
+                    {% endif %}
                 </td>
                 <td style="text-align: right; vertical-align: middle">
                 {% if steam_id %}

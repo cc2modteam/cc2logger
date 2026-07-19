@@ -13,16 +13,27 @@
         <th>Id:</th>
         <td>{{team.id}}</td>
     </tr>
+    <tr>
+        <th>Public:</th>
+        <td>{{team.public}}</td>
+    </tr>
     {% if user %}
     <tr>
         <th>Options:</th>
         <td>
-
+            {% if team.can_manage(user) %}
+            <form method="post" action="/confirm/team/{{team.id}}/delete"><button>Delete Team</button></form>
+            {% if team.public %}
+            <form method="post" action="/confirm/team/{{team.id}}/public/private/1"><button>Set Private</button></form>
+            {% else %}
+            <form method="post" action="/confirm/team/{{team.id}}/public/public/1"><button>Set Public</button></form>
+            {% endif %}
+            {% endif %}
             {% if user.steam_id in team.members %}
-                <form method="post" action="/team/{{team.id}}/player/remove/{{user.steam_id}}"><button>Leave Team</button></form>
+                <form method="post" action="/confirm/team/{{team.id}}/player/remove/{{user.steam_id}}"><button>Leave Team</button></form>
             {% else %}
                 {% if user.steam_id not in team.pending_join %}
-                <form method="post" action="/team/{{team.id}}/player/join"><button>Join Team</button></form>
+                <form method="post" action="/confirm/team/{{team.id}}/player/join"><button>Join Team</button></form>
                 {% else %}
                 <button disabled="disabled">Join Pending</button>
                 {% endif %}
@@ -34,32 +45,36 @@
     <tr>
         <th>Members:</th>
         <td style="vertical-align: top">
+            {% if user %}
             <table class="player">
-            {% for player in team.get_member_players()|sort %}
-                <tr>
-                    <td>
-                    {% if team.can_manage(user) %}
-                        <form method="post" action="/team/{{team.id}}/player/remove/{{player.steam_id}}"><button class="small">x</button></form>
-                    {% endif %}
-                    </td>
-                    <td>
-                    {% if player.steam_id in team.owners %}
+                {% for player in team.get_member_players()|sort %}
+                    <tr>
+                        <td>
                         {% if team.can_manage(user) %}
-                        <form method="post" action="/team/{{team.id}}/owner/remove/{{player.steam_id}}"><button>REMOVE MANAGER</button></form>
+                            <form method="post" action="/confirm/team/{{team.id}}/player/remove/{{player.steam_id}}"><button class="small">x</button></form>
+                        {% endif %}
+                        </td>
+                        <td>
+                        {% if player.steam_id in team.owners %}
+                            {% if team.can_manage(user) %}
+                            <form method="post" action="/confirm/team/{{team.id}}/owner/remove/{{player.steam_id}}"><button>REMOVE MANAGER</button></form>
+                            {% else %}
+                            MANAGER
+                            {% endif %}
                         {% else %}
-                        MANAGER
+                            {% if team.can_manage(user) %}
+                            <form method="post" action="/confirm/team/{{team.id}}/owner/add/{{player.steam_id}}"><button>SET MANAGER</button></form>
+                            {% endif %}
                         {% endif %}
-                    {% else %}
-                        {% if team.can_manage(user) %}
-                        <form method="post" action="/team/{{team.id}}/owner/add/{{player.steam_id}}"><button>SET MANAGER</button></form>
-                        {% endif %}
-                    {% endif %}
-                    </td>
-                    <td><img src="{{player.avatar}}"/></td>
-                    <td><a href="/player/{{player.steam_id}}">{{ player.personaname }}</a></td>
-                </tr>
-            {% endfor %}
+                        </td>
+                        <td><img src="{{player.avatar}}"/></td>
+                        <td><a href="/player/{{player.steam_id}}">{{ player.personaname }}</a></td>
+                    </tr>
+                {% endfor %}
             </table>
+            {% else %}
+                {{ team.members|length }}
+            {% endif %}
         </td>
     </tr>
     {% if user and team.can_manage(user) %}
@@ -70,8 +85,8 @@
             {% for player in team.pending_players|sort %}
                 <tr>
                     <td>
-                    <form method="post" action="/team/{{team.id}}/pending/approve/{{player.steam_id}}"><button>Approve</button></form>
-                    <form method="post" action="/team/{{team.id}}/pending/deny/{{player.steam_id}}"><button>Deny</button></form>
+                    <form method="post" action="/team/{{team.id}}/pending/approve/{{player.steam_id}}"><button id="confirm" type="submit" name="confirm" value="yes">Approve</button></form>
+                    <form method="post" action="/team/{{team.id}}/pending/deny/{{player.steam_id}}"><button id="confirm" type="submit" name="confirm" value="yes">Deny</button></form>
                     </td>
                     <td><img src="{{player.avatar}}"/></td>
                     <td><a href="/player/{{player.steam_id}}">{{ player.personaname }}</a></td>

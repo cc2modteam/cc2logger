@@ -8,11 +8,16 @@ from typing import Optional
 
 from flask import Flask, request, redirect, session, abort
 from pysteamsignin.steamsignin import SteamSignIn
-import profanity_check
+
 from cc2admin.logic import public_hostname
 from cc2admin.webserver import render_template as base_render_template
-from .logic import db, Player, PlayerTeam, Event
+from .logic import db, Player, PlayerTeam, Event, EventTeam
 import cc2admin
+
+try:
+    import profanity_check
+except ImportError:
+    profanity_check = None
 
 static_dir = Path(cc2admin.__file__).parent / "static"
 
@@ -85,6 +90,10 @@ def join_team(team: str):
 def delete_team(team: str):
     return delete_subject(db.get_team(team))
 
+@app.post("/event_team/<string:team>/delete/")
+def delete_event_team(team: str):
+    return delete_subject(db.get_event_team(team))
+
 @app.post("/event/<string:evt>/delete/")
 def delete_event(evt: str):
     return delete_subject(db.get_event(evt))
@@ -114,6 +123,48 @@ def new_event_form():
         redirect("/login")
     return render_template("new-event.html")
 
+@app.post("/event/<string:event>/join/<string:eteam>")
+def join_event_team(event: str, eteam: str):
+    user = authenticated()
+    if not user:
+        redirect("/login")
+    e = db.get_event(event)
+    if not e:
+        abort(HTTPStatus.BAD_REQUEST)
+    e_team = db.get_event_team(eteam)
+    if not e_team:
+        abort(HTTPStatus.BAD_REQUEST)
+    if e_team.event != e.id:
+        abort(HTTPStatus.BAD_REQUEST)
+    e.join_team(e_team, user)
+    return redirect(f"/event/{event}")
+
+@app.post("/event/<string:event>/leave")
+def leave_event_team(event: str):
+    user = authenticated()
+    if not user:
+        redirect("/login")
+    e = db.get_event(event)
+    if not e:
+        abort(HTTPStatus.BAD_REQUEST)
+    e.leave_teams(user)
+    return redirect(f"/event/{event}")
+
+@app.post("/event/<string:event>/remove/<string:player>")
+def remove_team_event_player(event: str, player: str):
+    user = authenticated()
+    if not user:
+        redirect("/login")
+    e = db.get_event(event)
+    if not e:
+        abort(HTTPStatus.BAD_REQUEST)
+    if e.can_manage(user):
+        p = db.get_player(player)
+        if p:
+            e.leave_teams(p)
+
+    return redirect(f"/event/{event}")
+
 
 @app.post("/team/new")
 def create_team():
@@ -135,6 +186,19 @@ def create_event():
             if hrs.isnumeric() and mins.isnumeric():
                 ts = datetime.timedelta(hours=int(hrs), minutes=int(mins))
                 evt.duration = ts
+        n_teams = int(data.get("evt_teams", "1"))
+        team_sizes = data.get("evt_team_size")
+        if team_sizes and team_sizes.isnumeric():
+            evt.team_size = int(team_sizes)
+        res_sizes = data.get("evt_team_reserve_size")
+        if res_sizes and res_sizes.isnumeric():
+            evt.reserve_size = int(res_sizes)
+        for n in range(n_teams):
+            t = EventTeam(str(uuid.uuid4()), f"Team {n+1}")
+            evt.teams.append(t.id)
+            evt.write()
+            t.event = evt.id
+            t.write()
 
     return create_team_object("event", Event, check_name=None, custom=created_event)
 
@@ -166,12 +230,13 @@ def create_team_object(typename: str, objtype,
             if len(name) > 63:
                 reject = "Name too long"
             else:
-                p1 = profanity_check.predict([name])
-                if 1 in p1:
-                    reject = "Profanity checker rejected team name"
-                p2 = profanity_check.predict([url])
-                if 1 in p2:
-                    reject = "Profanity checker rejected team homepage"
+                if profanity_check:
+                    p1 = profanity_check.predict([name])
+                    if 1 in p1:
+                        reject = "Profanity checker rejected team name"
+                    p2 = profanity_check.predict([url])
+                    if 1 in p2:
+                        reject = "Profanity checker rejected team homepage"
 
                 if check_name:
                     existing = check_name(name)

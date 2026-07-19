@@ -4,25 +4,25 @@
 
 {% block content %}
 <h3>Event</h3>
-<table>
+<table style="min-width: 95%">
     <tr>
         <th>Name:</th>
-        <td>{{event.name}}</td>
+        <td>{{event.name}}
+            {% if event.ended %}
+            - (ended)
+            {% endif %}
+        </td>
     </tr>
     {% if event.start %}
     <tr>
         <th>Start at:</th>
-        <td>{{event.start}} ({{event.duration.seconds // 60}} minute event)</td>
+        <td>{{event.start}}</td>
+    </tr>
+    <tr>
+        <th>Length:</th>
+        <td>{{event.duration.seconds // 60}} minutes</td>
     </tr>
     {% endif %}
-    <tr>
-        <th>Created at:</th>
-        <td>{{event.created}}</td>
-    </tr>
-    <tr>
-        <th>Id:</th>
-        <td>{{event.id}}</td>
-    </tr>
     <tr>
         <th>Public:</th>
         <td>{{event.public}}</td>
@@ -42,6 +42,50 @@
         </td>
     </tr>
     {% endif %}
+
+    <tr>
+        <td colspan="2">
+            <table style="min-width: 99%">
+                <tr>
+                    {% for team in event.event_teams %}
+                    <th>
+                        {{ team.name }}
+                    </th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for team in event.event_teams %}
+                    <td style="vertical-align: top">
+                        {% if user and not event.ended %}
+                            {% if user.steam_id|int in team.members %}
+                        <form method="post" action="/event/{{event.id}}/leave"><button>Leave Team</button></form>
+                            {% else %}
+                                {% if user.steam_id|int not in team.members %}
+                        <form method="post" action="/event/{{event.id}}/join/{{team.id}}"><button>Join Team</button></form>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                        <div>
+                            <table>
+                        {% for player in team.players|sort %}
+                                <tr>
+                                    <td>
+                                        {% if event.can_manage(user) %}
+                                        <form method="post" action="/event/{{event.id}}/remove/{{player.steam_id}}"><button class="small">X</button></form>
+                                        {% endif %}
+                                    </td>
+                                    <td><img src="{{player.avatar}}"/></td>
+                                    <td><a href="/player/{{player.steam_id}}">{{ player.personaname }}</a></td>
+                                </tr>
+                        {% endfor %}
+                            </table>
+                        </div>
+                    </td>
+                    {% endfor %}
+                </tr>
+            </table>
+        </td>
+    </tr>
 
 </table>
 

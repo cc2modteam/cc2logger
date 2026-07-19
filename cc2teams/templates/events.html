@@ -3,6 +3,21 @@
 {% block heading %}CC2 Fleet Database{% endblock %}
 
 {% block content %}
+{% if user %}
+<table>
+    <tr>
+        <td>
+            <a href="/new/team">
+                <button>New Team</button>
+            </a>
+            <a href="/new/event">
+                <button>New Event</button>
+            </a>
+        </td>
+    </tr>
+</table>
+{% endif %}
+
 <h3>Events</h3>
 <table>
     {% for evt in events.values()|sort %}

@@ -165,15 +165,20 @@ class PlayerTeam(SingleRowDataModel):
 
 @dataclass
 class EventTeam(PlayerTeam):
-    max_players: int = 0
-    reserve_size: int = 0
-    event: int = 0
+    event: str = ""
 
     db = SqliteDict(str(db_dir / "eventteam.sqlite"), autocommit=False)
 
     @property
     def prefix(self) -> str:
-        return "eventteam"
+        return "event_team"
+
+    @property
+    def players(self) -> set[Player]:
+        return self.get_member_players()
+
+    def delete(self):
+        db.delete_event_team(self)
 
 
 @dataclass
@@ -187,6 +192,9 @@ class Event(PlayerTeam):
     teams: list[str] = field(default_factory=list)
     owners: list[int] = field(default_factory=list)
 
+    team_size: int = 6
+    reserve_size: int = 1
+
     db = SqliteDict(str(db_dir / "event.sqlite"), autocommit=False)
 
     def __lt__(self, other):
@@ -196,6 +204,10 @@ class Event(PlayerTeam):
         return True
 
     def delete(self):
+        for teamid in self.teams:
+            team = db.get_event_team(teamid)
+            if team:
+                team.delete()
         db.delete_event(self)
 
     @property
@@ -235,6 +247,22 @@ class Event(PlayerTeam):
     def can_manage(self, user: int|Player) -> bool:
         return can_manage(self, user)
 
+    @property
+    def event_teams(self) -> list[EventTeam]:
+        r = list(EventTeam.read(x) for x in self.teams)
+        return r
+
+    def leave_teams(self, player: Player):
+        for t in self.event_teams:
+            if player.steam_id in t.members:
+                t.remove_user(player.steam_id)
+                t.write()
+
+    def join_team(self, team: EventTeam, player: Player):
+        self.leave_teams(player)
+        if len(team.members) < self.team_size:
+            team.add_member(player.steam_id)
+        team.write()
 
 class Database:
 
@@ -303,6 +331,9 @@ class Database:
                     return t
         return None
 
+    def get_event_team(self, team: str) -> Optional[EventTeam]:
+        return EventTeam.read(team)
+
     def delete_team(self, team: PlayerTeam):
         if team and team.id in self.team_ids():
             del PlayerTeam.db[team.primary_key]
@@ -318,6 +349,11 @@ class Database:
         if event and event.id:
             del Event.db[event.primary_key]
             Event.db.commit()
+
+    def delete_event_team(self, event: EventTeam):
+        if event and event.id:
+            del EventTeam.db[event.primary_key]
+            EventTeam.db.commit()
 
 
 db = Database()

@@ -224,9 +224,6 @@ class Event(PlayerTeam):
     def add_member(self, steam_id) -> bool:
         return False
 
-    def add_pending(self, steam_id) -> bool:
-        return False
-
     def remove_user(self, steam_id: int) -> None:
         pass
 
@@ -262,6 +259,8 @@ class Event(PlayerTeam):
         self.leave_teams(player)
         if len(team.members) < self.team_size:
             team.add_member(player.steam_id)
+        else:
+            team.add_pending(player.steam_id)
         team.write()
 
 class Database:

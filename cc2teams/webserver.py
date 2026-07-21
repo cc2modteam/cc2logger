@@ -137,6 +137,7 @@ def join_event_team(event: str, eteam: str):
     if e_team.event != e.id:
         abort(HTTPStatus.BAD_REQUEST)
     if not e.ended or user.admin:
+        e.leave_teams(user)
         e.join_team(e_team, user)
     return redirect(f"/event/{event}")
 

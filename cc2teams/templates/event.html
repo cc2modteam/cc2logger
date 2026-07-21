@@ -42,6 +42,10 @@
         </td>
     </tr>
     {% endif %}
+    <tr>
+        <th>Players per team:</th>
+        <td>{{event.team_size}}</td>
+    </tr>
 
     <tr>
         <td colspan="2">
@@ -60,7 +64,7 @@
                             {% if user.steam_id|int in team.members %}
                         <form method="post" action="/event/{{event.id}}/leave"><button>Leave Team</button></form>
                             {% else %}
-                                {% if user.steam_id|int not in team.members %}
+                                {% if user.steam_id|int not in team.members and user.steam_id|int not in team.pending %}
                         <form method="post" action="/event/{{event.id}}/join/{{team.id}}"><button>Join Team</button></form>
                                 {% endif %}
                             {% endif %}
@@ -84,6 +88,18 @@
                                     </td>
                                     <td><img src="{{player.avatar}}"/></td>
                                     <td><a href="/player/{{player.steam_id}}">{{ player.personaname }}</a></td>
+                                </tr>
+                        {% endfor %}
+
+                        {% for player in team.pending_players|sort %}
+                                <tr>
+                                    <td>
+                                        {% if event.can_manage(user) %}
+                                        <form method="post" action="/event/{{event.id}}/remove/{{player.steam_id}}"><button class="small">X</button></form>
+                                        {% endif %}
+                                    </td>
+                                    <td><img src="{{player.avatar}}"/></td>
+                                    <td><a href="/player/{{player.steam_id}}">{{ player.personaname }}</a> (Reserve)</td>
                                 </tr>
                         {% endfor %}
                             </table>

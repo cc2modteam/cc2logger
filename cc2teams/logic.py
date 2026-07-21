@@ -156,7 +156,8 @@ class PlayerTeam(SingleRowDataModel):
         return False
 
     def remove_user(self, steam_id: int) -> None:
-        if steam_id in self.pending_players:
+        steam_id = int(steam_id)
+        if steam_id in self.pending_join:
             self.pending_join.remove(steam_id)
         if steam_id in self.members:
             self.members.remove(steam_id)
@@ -244,6 +245,12 @@ class Event(PlayerTeam):
     def can_manage(self, user: int|Player) -> bool:
         return can_manage(self, user)
 
+    def can_join(self, team: EventTeam, player: Player):
+        return player.steam_id not in team.pending_join and player.steam_id not in team.members
+
+    def can_leave(self, team: EventTeam, player: Player):
+        return player.steam_id in team.pending_join or player.steam_id in team.members
+
     @property
     def event_teams(self) -> list[EventTeam]:
         r = list(EventTeam.read(x) for x in self.teams)
@@ -251,7 +258,7 @@ class Event(PlayerTeam):
 
     def leave_teams(self, player: Player):
         for t in self.event_teams:
-            if player.steam_id in t.members:
+            if player.steam_id in t.members or player.steam_id in t.pending_join:
                 t.remove_user(player.steam_id)
                 t.write()
 

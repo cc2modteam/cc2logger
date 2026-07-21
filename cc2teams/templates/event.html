@@ -61,10 +61,11 @@
                     {% for team in event.event_teams %}
                     <td style="vertical-align: top">
                         {% if user and not event.ended %}
-                            {% if user.steam_id|int in team.members %}
+                            {% if event.can_leave(team, user) %}
+
                         <form method="post" action="/event/{{event.id}}/leave"><button>Leave Team</button></form>
                             {% else %}
-                                {% if user.steam_id|int not in team.members and user.steam_id|int not in team.pending %}
+                                {% if event.can_join(team, user) %}
                         <form method="post" action="/event/{{event.id}}/join/{{team.id}}"><button>Join Team</button></form>
                                 {% endif %}
                             {% endif %}

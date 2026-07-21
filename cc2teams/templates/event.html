@@ -25,7 +25,13 @@
     {% endif %}
     <tr>
         <th>Public:</th>
-        <td>{{event.public}}</td>
+        <td style="vertical-align: text-before-edge">
+            {% if event.public %}
+            <form method="post" action="/confirm/event/{{event.id}}/public/private/1">Public <button>Set Private</button></form>
+            {% else %}
+            <form method="post" action="/confirm/event/{{event.id}}/public/public/1">Private <button>Set Public</button></form>
+            {% endif %}
+        </td>
     </tr>
     {% if user %}
     <tr>
@@ -33,11 +39,7 @@
         <td>
             {% if event.can_manage(user) %}
             <form method="post" action="/confirm/event/{{event.id}}/delete"><button>Delete Event</button></form>
-                {% if event.public %}
-            <form method="post" action="/confirm/event/{{event.id}}/public/private/1"><button>Set Private</button></form>
-                {% else %}
-            <form method="post" action="/confirm/event/{{event.id}}/public/public/1"><button>Set Public</button></form>
-                {% endif %}
+
             {% endif %}
         </td>
     </tr>

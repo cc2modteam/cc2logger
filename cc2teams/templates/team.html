@@ -15,7 +15,13 @@
     </tr>
     <tr>
         <th>Public:</th>
-        <td>{{team.public}}</td>
+        <td>
+            {% if team.public %}
+            <form method="post" action="/confirm/team/{{team.id}}/public/private/1">Public <button>Set Private</button></form>
+            {% else %}
+            <form method="post" action="/confirm/team/{{team.id}}/public/public/1">Private <button>Set Public</button></form>
+            {% endif %}
+        </td>
     </tr>
     {% if user %}
     <tr>
@@ -23,11 +29,6 @@
         <td>
             {% if team.can_manage(user) %}
             <form method="post" action="/confirm/team/{{team.id}}/delete"><button>Delete Team</button></form>
-            {% if team.public %}
-            <form method="post" action="/confirm/team/{{team.id}}/public/private/1"><button>Set Private</button></form>
-            {% else %}
-            <form method="post" action="/confirm/team/{{team.id}}/public/public/1"><button>Set Public</button></form>
-            {% endif %}
             {% endif %}
             {% if user.steam_id in team.members %}
                 <form method="post" action="/confirm/team/{{team.id}}/player/remove/{{user.steam_id}}"><button>Leave Team</button></form>

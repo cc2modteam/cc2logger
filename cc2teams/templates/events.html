@@ -16,7 +16,7 @@
 
 <h3>Events</h3>
 <table>
-    {% for evt in events.values()|sort %}
+    {% for evt in events.values()|sort(true)     %}
     {% if evt.public or evt.can_manage(user) %}
     <tr>
         <td><a href="/event/{{evt.id}}">{{evt.name}}</a></td>

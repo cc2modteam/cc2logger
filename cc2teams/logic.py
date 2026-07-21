@@ -167,7 +167,7 @@ class PlayerTeam(SingleRowDataModel):
 @dataclass
 class EventTeam(PlayerTeam):
     event: str = ""
-
+    winner: Optional[bool] = False
     db = SqliteDict(str(db_dir / "eventteam.sqlite"), autocommit=False)
 
     @property

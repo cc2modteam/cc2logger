@@ -13,6 +13,7 @@
         <th>Id:</th>
         <td>{{team.id}}</td>
     </tr>
+    {% if team.can_manage(user) %}
     <tr>
         <th>Public:</th>
         <td>
@@ -23,6 +24,7 @@
             {% endif %}
         </td>
     </tr>
+    {% endif %}
     {% if user %}
     <tr>
         <th>Options:</th>

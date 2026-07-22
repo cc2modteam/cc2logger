@@ -163,6 +163,12 @@ class PlayerTeam(SingleRowDataModel):
             self.members.remove(steam_id)
         self.write()
 
+    def can_join(self, player: Player):
+        return player.steam_id not in self.pending_join and player.steam_id not in self.members
+
+    def can_leave(self, player: Player):
+        return player.steam_id in self.pending_join or player.steam_id in self.members
+
 
 @dataclass
 class EventTeam(PlayerTeam):

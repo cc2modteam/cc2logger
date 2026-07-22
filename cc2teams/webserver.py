@@ -272,6 +272,7 @@ def confirm(subject_type: str, subject: str, action: str, apply: str = "", value
         subject_display_type = subject_type
         if subject_type in ["team", "event"]:
             t = None
+            message = None
             if subject_type == "team":
                 t = db.get_team(subject)
             elif subject_type == "event":
@@ -279,6 +280,9 @@ def confirm(subject_type: str, subject: str, action: str, apply: str = "", value
 
             if not t:
                 abort(HTTPStatus.NOT_FOUND)
+            if apply == "join":
+                message = f"Join {subject_type} '{t.name}'?"
+
             if t.can_manage(user):
                 message = f"{subject_display_type} '{t.name}' {action} > {apply}?"
                 if action == "delete":
@@ -298,9 +302,8 @@ def confirm(subject_type: str, subject: str, action: str, apply: str = "", value
                             if not p:
                                 abort(HTTPStatus.BAD_REQUEST)
                             message = f"Remove '{p.personaname}' from {subject_display_type} '{t.name}'?"
-
-                    elif apply == "join":
-                        message = f"Join {subject_type} '{t.name}'?"
+            
+            if message:
                 return render_template("confirm.html", team=t,
                                        message = message,
                                        subject_type=subject_type,
